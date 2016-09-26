@@ -1,23 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
+
   <link type:"text/css" rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PUPPERS!</title>
 </head>
-<body>
-    <div id="main"></div>
+<body style="margin: 0px">
+
+
+    <div id="main" style="background: #2e3a4f; height: 70px">
+
+    <div style="position: absolute; margin-top: 8px; margin-bottom: 8px; margin-left: 4px">
+        <h1 style="margin: 0px; color: white"><i>PUPPERS</i></h1>
+    </div>
     <div>
-        <form>
-            <p>email<br>
-            <input id='email' name= 'email'></input><br>
-            <p>password<br>
+        <form style="float:right; position: relative; margin-left: 150px; margin-top: 4px; margin-right: 3px">
+
+            <label style="margin: 0px; color: white">email<label>
+            <input id='email' name= 'email' ></input>
+            <label style="color: white">password</label>
             <input id='password' type='password' name= 'password'></input><br><br>
-            <button type='button' class= 'login'>submit</button>
+            <button type='button' id="button" class='login' >submit</button>
         </form>
-        <a href="/register.html">Don't have a login? Register!</a>
+        <a href="/register.html" style="float:right; color: white">Don't have a login? Register!</a>
+    </div>
     </div>
 
-    <div>
+    <div style="padding-top: 140px">
         <button type="button">POST A PUPPER!</button>
         <p>LAAAAAAAAAAAAAAAAAA</p>
 

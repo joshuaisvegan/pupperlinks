@@ -17,7 +17,7 @@ const hb = require('express-handlebars');
 app.use(express.static(__dirname + '/static'));
 
 app.get('/', function(req, res, next) {
-    console.log("its on")
+
     res.sendFile(__dirname+ '/index.html');
 })
 

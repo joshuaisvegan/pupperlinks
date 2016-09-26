@@ -1,0 +1,27 @@
+{
+  "name": "pupperlinks",
+  "version": "1.0.0",
+  "description": "Puppy Videos, duh.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuaisvegan/pupperlinks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshuaisvegan/pupperlinks/issues"
+  },
+  "homepage": "https://github.com/joshuaisvegan/pupperlinks#readme",
+  "dependencies": {
+    "cookie-session": "^2.0.0-alpha.1",
+    "csurf": "^1.9.0",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "pg": "^6.1.0"
+  }
+}
