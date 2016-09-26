@@ -1,3 +1,4 @@
+
 CREATE TABLE pupfans (
     id SERIAL primary key,
     name VARCHAR(255) not null,
