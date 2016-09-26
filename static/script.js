@@ -3,11 +3,14 @@
     var Router = Backbone.Router.extend({
         routes: {
             'main': 'main',
-            'post': 'post'
+            'post': 'post',
+            'login': 'login'
         },
         main: function(){
+            var mainModel = new MainModel();
             var mainView = new MainView({
-                el: '#main'
+                el: '#main',
+                model: mainModel
             });
         },
         post: function(){
@@ -16,9 +19,22 @@
                 el: '#main',
                 model: postModel
             });
+        },
+        login: function(){
+            var loginModel = new LoginModel();
+            var loginView = new LoginView({
+                el: '#main',
+                model: loginModel
+            });
         }
     });
 
+    var MainModel = Backbone.Model.extend({
+        url: 'login',
+        save: function() {
+            return $.post(this.url, this.toJSON());
+        }
+    });
 
     var MainView = Backbone.View.extend({
         render: function(){
@@ -26,21 +42,63 @@
             this.$el.html(mainPage);
         },
         initialize: function(){
+            $('#main').empty();
             this.render();
+        },
+        events: {
+            'click #newLinkButton': function(event) {
+                window.location.hash = 'post';
+            },
+            'click #button': function(event) {
+                this.model.set({
+                    email: $('#email').val(),
+                    password: $('#password').val()
+                }).save().then(function(res) {
+                    console.log('password matches');
+
+                });
+            }
         }
     });
 
     var PostModel = Backbone.Model.extend({
-        url: 'post'
+        url: 'post',
+        save: function() {
+            return $.post(this.url, this.toJSON());
+        }
     });
 
     var PostView = Backbone.View.extend({
-        initialize: function(){
-            this.render();
-        },
         render: function(){
             var postForm = $('#postForm').html();
             this.$el.html(postForm);
+        },
+        initialize: function(){
+            $('#main').empty();
+            this.render();
+        },
+        events: {
+            'click #postButton': function(event){
+                this.model.set({
+                    headline: $("input[name|='headline']").val(),
+                    link: $("input[name|='link']").val()
+                }).save().then(function(res) {
+                    console.log('submitted');
+                    window.location.hash = 'main';
+                    
+                });
+            }
+        }
+    });
+
+
+
+    var LoginView = Backbone.View.extend({
+        render: function(){
+
+        },
+        initialize: function(){
+
         }
     });
 
