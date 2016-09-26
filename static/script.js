@@ -3,7 +3,8 @@
     var Router = Backbone.Router.extend({
         routes: {
             'main': 'main',
-            'post': 'post'
+            'post': 'post',
+            'login': 'login'
         },
         main: function(){
             var mainView = new MainView({
@@ -16,6 +17,13 @@
                 el: '#main',
                 model: postModel
             });
+        },
+        login: function(){
+            var loginModel = new LoginModel();
+            var loginView = new LoginView({
+                el: '#main',
+                model: loginModel
+            });
         }
     });
 
@@ -26,7 +34,16 @@
             this.$el.html(mainPage);
         },
         initialize: function(){
+            $('#main').empty();
             this.render();
+        },
+        events: {
+            'click #newLinkButton': function(event){
+                window.location.hash = 'post';
+            },
+            'click #button': function(event){
+                console.log('hello');
+            }
         }
     });
 
@@ -35,12 +52,31 @@
     });
 
     var PostView = Backbone.View.extend({
-        initialize: function(){
-            this.render();
-        },
         render: function(){
             var postForm = $('#postForm').html();
             this.$el.html(postForm);
+        },
+        initialize: function(){
+            $('#main').empty();
+            this.render();
+        },
+        events: {
+            'click #postButton': function(event){
+                window.location.hash = 'main';
+            }
+        }
+    });
+
+    var LoginModel = Backbone.Model.extend({
+        url: 'login'
+    });
+
+    var LoginView = Backbone.View.extend({
+        render: function(){
+
+        },
+        initialize: function(){
+
         }
     });
 
