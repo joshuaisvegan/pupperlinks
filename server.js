@@ -22,8 +22,8 @@ app.get('/', function(req, res, next) {
 });
 
 app.post('/register', function(req, res){
-    console.log(666);
-    console.log(req.body);
+
+
     var client = new pg.Client("postgres://joshua:!nshallah@localhost:5432/users");
     client.connect(function (err) {
         if (err){
@@ -40,7 +40,7 @@ app.post('/register', function(req, res){
                     email: req.body.email,
                     password: req.body.password
                 };
-                res.write('YOU DID THE THING!');
+
                 res.end();
             });
         }).catch(function(err){
