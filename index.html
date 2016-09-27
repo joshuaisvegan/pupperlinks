@@ -1,48 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <link type:"text/css" rel="stylesheet" href="style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PUPPERS!</title>
 </head>
+
 <body id="body">
+    <div id="main"></div>
+    <div id="linkPage" style="display: none">
+        <div id="header">
 
-<div id="main"></div>
-<div id="linkPage" style="display: none">
-    <div id="header">
-
-        <div id="logo">
-            <h1>PUPPERVIEW</h1>
-            <div id="pugDiv">
-                <img src="pug.gif" id="pug"></img>
+            <div id="logo">
+                <h1>PUPPERVIEW</h1>
+                <div id="pugDiv">
+                    <img src="pug.gif" id="pug"></img>
+                </div>
             </div>
-        </div>
 
-        <div>
-            <form id="loginForm">
-
-                <label id="email">email<label>
-                    <input id='email' name= 'email' ></input>
-                    <label id="password">password</label>
-                    <input id='password' type='password' name= 'password'></input><br><br>
-                    <button id="loginButton" type='button' id="button" class='login' >submit</button>
-                </form>
-                <a href="/register" id="registerLink">Don't have a login? Click here to register!</a>
+            <div>
+                <form id="loginForm">
+                    <label id="email">email<label>
+                        <input id='email' name= 'email' ></input>
+                        <label id="password">password</label>
+                        <input id='password' type='password' name= 'password'></input><br><br>
+                        <button id="loginButton" type='button' id="button" class='login' >submit</button>
+                    </form>
+                    <a href="/register" id="registerLink">Don't have a login? Click here to register!</a>
+                </div>
             </div>
-        </div>
 
-
-
-
-
-
-            <div style="padding-top: 140px">
+            <div id="postForm">
                 <button type="button" id="newLinkButton">POST A PUPPER!</button>
                 <p></p>
-
             </div>
-
         </div>
 
         <div id="postForm" style="display: none">
@@ -59,14 +50,11 @@
             </form>
         </div>
 
-
         <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
         <script src="assets/underscore.js"></script>
         <script src="assets/backbone.js"></script>
         <script src="script.js"></script>
-
-
 
     </body>
     </html>
