@@ -50,6 +50,7 @@
                 window.location.hash = 'post';
             },
             'click #button': function(event) {
+                console.log('hello');
                 this.model.set({
                     email: $('#email').val(),
                     password: $('#password').val()
@@ -85,7 +86,7 @@
                 }).save().then(function(res) {
                     console.log('submitted');
                     window.location.hash = 'main';
-                    
+
                 });
             }
         }
