@@ -82,7 +82,7 @@ app.post('/register', function(req, res){
                         userID: results.rows[0].id,
                         email: email
                     }
-                    res.sendFile(__dirname + '/login.html');
+                    res.redirect('/#main');
                 }
             });
         });
@@ -91,13 +91,13 @@ app.post('/register', function(req, res){
 
 app.get('/register', function(req, res, next) {
     res.sendFile(__dirname+ '/registration.html');
-})
+});
 
 
 app.post('/login', function (req, res) {
-    console.log(req.body.name);
+    console.log(req.body.email);
 
-    if (!req.body.name.length || !req.body.password.length) {
+    if (!req.body.email.length || !req.body.password.length) {
 
         console.log('error');
     }
@@ -107,10 +107,10 @@ app.post('/login', function (req, res) {
         if (err){
             throw (err);
         }
-        var query = 'SELECT * FROM usersLinks WHERE pupfans.name = $1';
-        var name = req.body.name;
+        var query = 'SELECT * FROM usersLinks WHERE usersLinks.email = $1';
+        var email = req.body.email;
 
-        client.query(query, [name], function (err, results) {
+        client.query(query, [email], function (err, results) {
             console.log(results.rows);
             if (!results.rows.length) {
                 err = true;
@@ -142,13 +142,67 @@ app.post('/login', function (req, res) {
     });
 });
 
-app.post('/links', function (req, res) {
+app.post('/post', function (req, res) {
+    var headline = req.body.headline,
+        link = req.body.link,
+        userid = 1;
+    console.log(req.body);
+    if (!req.body.link.length) {
 
+        console.log('error');
+        return;
+    }
+
+    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    client.connect(function (err) {
+        if (err){
+            throw err;
+        }
+
+        var query = "INSERT INTO links(link, userid, content) VALUES($1, $2, $3) RETURNING id"
+        client.query(query, [link, userid, headline], function(err, results) {
+            if (err) {
+                console.log(err);
+
+            } else {
+                client.end();
+                console.log('it works');
+                console.log(results);
+
+                res.sendStatus(200);
+            }
+        });
+    });
 });
 
 app.get('/links', function (req, res) {
 
-})
+    console.log(req.body);
+    if (!req.body.link.length) {
 
+        console.log('error');
+        return;
+    }
+
+    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    client.connect(function (err) {
+        if (err){
+            throw err;
+        }
+
+        var query = "SELECT * FROM links"
+        client.query(query, function(err, results) {
+            if (err) {
+                console.log(err);
+
+            } else {
+                client.end();
+
+                res.redirect('/#main');
+            }
+        });
+    });
+
+})
 
 app.listen(8081);

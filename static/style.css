@@ -2,7 +2,7 @@
     margin: 0px;
 }
 
-#header {
+.header {
     background: black;
     height: 63px;
 }
@@ -15,13 +15,13 @@
     margin-left: 4px;
 }
 
-#pugDiv {
+.pugDiv {
     display: inline;
     width: 70px;
     height: 70px;
 }
 
-#pug {
+.pug {
     height: 60px;
     width: auto;
 }
@@ -66,6 +66,14 @@ a {
     text-decoration: none;
 }
 
+#regForm{
+
+}
+
+#postForm{
+    margin-top: 20px;
+}
+
 .button {
     position: relative;
     background-color: #4CAF50;
@@ -102,6 +110,6 @@ a {
     transition: 0s
 }
 
-#postForm {
+#postButton {
     margin-top: 20px;
 }
