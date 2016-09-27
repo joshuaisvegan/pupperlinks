@@ -1,3 +1,70 @@
+#body {
+    margin: 0px;
+}
+
+#header {
+    background: black;
+    height: 63px;
+}
+
+#logo {
+    position: absolute;
+    width: 700px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: 4px;
+}
+
+#pugDiv {
+    display: inline;
+    width: 70px;
+    height: 70px;
+}
+
+#pug {
+    height: 60px;
+    width: auto;
+}
+
+h1 {
+    display:inline;
+    margin: 0px;
+    color: white;
+    font-family: arial;
+    font-size: 60px;
+}
+
+#loginForm{
+    display:inline-block;
+    float:right;
+    position: relative;
+    margin-left: 150px;
+    margin-top: 4px;
+    margin-right: 3px
+}
+
+#email {
+    margin: 0px;
+    color: white
+}
+
+#password {
+    color: white;
+}
+
+#loginButton {
+    display: inline;
+}
+
+#registerLink {
+    float:right;
+    color: white;
+}
+
+a {
+    text-decoration: none;
+}
+
 .button {
     position: relative;
     background-color: #4CAF50;
@@ -32,4 +99,8 @@
     margin: 0;
     opacity: 1;
     transition: 0s
+}
+
+#postForm {
+    margin-top: 20px;
 }
