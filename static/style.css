@@ -43,12 +43,13 @@ h1 {
     margin-right: 3px
 }
 
-#email {
+#emailLabel {
+    width: 200px;
     margin: 0px;
     color: white
 }
 
-#password {
+#passwordLabel {
     color: white;
 }
 

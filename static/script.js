@@ -55,8 +55,10 @@
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
             },
-            'click #button': function(event) {
-                alert('vdvdf')
+
+            'click #loginButton': function(event) {
+                console.log('hello');
+
                 this.model.set({
                     email: $('#email').val(),
                     password: $('#password').val()
