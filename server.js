@@ -65,7 +65,7 @@ app.post('/register', function(req, res){
             if (err) {
                 console.log(err);
             }
-            var query = "INSERT INTO pupfans(name, email, hash) VALUES($1, $2, $3) RETURNING id"
+            var query = "INSERT INTO usersLinks(name, email, hash) VALUES($1, $2, $3) RETURNING id"
             client.query(query, [name, email, hash], function(err, results) {
                 if (err) {
                     console.log(err);
@@ -107,7 +107,7 @@ app.post('/login', function (req, res) {
         if (err){
             throw (err);
         }
-        var query = 'SELECT * FROM pupfans WHERE pupfans.name = $1';
+        var query = 'SELECT * FROM usersLinks WHERE pupfans.name = $1';
         var name = req.body.name;
 
         client.query(query, [name], function (err, results) {
@@ -142,7 +142,13 @@ app.post('/login', function (req, res) {
     });
 });
 
-app.post('/messages', function (req, res) {
-    
+app.post('/links', function (req, res) {
+
+});
+
+app.get('/links', function (req, res) {
+
 })
+
+
 app.listen(8081);
