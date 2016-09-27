@@ -1,18 +1,30 @@
 (function(){
 
+    var templates = document.querySelectorAll('script[type="text/handlebars"]');
+
+    Handlebars.templates = Handlebars.templates || {};
+    console.log(Handlebars.templates);
+
+    Array.prototype.slice.call(templates).forEach(function(script) {
+        Handlebars.templates[script.id] = Handlebars.compile(script.innerHTML);
+    });
+
+
     var Router = Backbone.Router.extend({
         routes: {
             'main': 'main',
             'post': 'post',
-            'login': 'login'
         },
         main: function(){
-
             var mainModel = new MainModel();
             var mainView = new MainView({
                 el: '#main',
                 model: mainModel
-
+            });
+            var loginModel = new LoginModel();
+            var loginView = new LoginView({
+                el: '#loginSlot',
+                model: loginModel
             });
         },
         post: function(){
@@ -22,20 +34,30 @@
                 model: postModel
             });
         },
-        login: function(){
-            var loginModel = new LoginModel();
-            var loginView = new LoginView({
-                el: '#main',
-                model: loginModel
-            });
-        }
     });
-
-
-    var MainModel = Backbone.Model.extend({
+    var LoginModel = Backbone.Model.extend({
         url: '/login',
         save: function() {
             return $.post(this.url, this.toJSON());
+        }
+    });
+
+    var LoginView = Backbone.View.extend({
+        render: function(){
+            var login = $('#loginContainer').html();
+            this.$el.html(login);
+            console.log(login);
+        },
+        initialize: function(){
+            this.render();
+        }
+    });
+
+    var MainModel = Backbone.Model.extend({
+        url: '/links',
+
+        initialize: function() {
+            this.fetch();
         }
     });
 
@@ -44,21 +66,25 @@
         render: function(){
             var mainPage = $('#linkPage').html();
             this.$el.html(mainPage);
+
+            var linksFromDB = this.model.get('data');
+            var renderedLinks = Handlebars.templates.links(linksFromDB);
+            $('#linkContainer').html(renderedLinks);
+
         },
         initialize: function(){
-
             $('#main').empty();
             this.render();
+            var view = this;
+            this.model.on('change', function () {
+               view.render();
+           });
         },
         events: {
-
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
             },
-
             'click #loginButton': function(event) {
-                console.log('hello');
-
                 this.model.set({
                     email: $('#email').val(),
                     password: $('#password').val()
@@ -66,25 +92,21 @@
                     console.log('password matches');
 
                 });
-
             }
-
         }
     });
 
     var PostModel = Backbone.Model.extend({
-
-        url: 'post',
+        url: '/links',
         save: function() {
             return $.post(this.url, this.toJSON());
         }
-
     });
 
     var PostView = Backbone.View.extend({
         render: function(){
-            var postForm = $('#postForm').html();
-            this.$el.html(postForm);
+            var form = $('#postForm').html();
+            this.$el.html(form);
         },
         initialize: function(){
             $('#main').empty();
@@ -92,28 +114,18 @@
         },
         events: {
             'click #postButton': function(event){
-
                 this.model.set({
-                    headline: $("input[name|='headline']").val(),
+                    title: $("input[name|='headline']").val(),
                     link: $("input[name|='link']").val()
                 }).save().then(function(res) {
                     console.log('submitted');
                     window.location.hash = 'main';
-
                 });
-
             }
         }
     });
 
-    var LoginView = Backbone.View.extend({
-        render: function(){
 
-        },
-        initialize: function(){
-
-        }
-    });
 
     var router = new Router();
     Backbone.history.start();
