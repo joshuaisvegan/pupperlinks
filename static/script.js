@@ -67,7 +67,7 @@
             var mainPage = $('#linkPage').html();
             this.$el.html(mainPage);
 
-            var linksFromDB = this.model.get('links');
+            var linksFromDB = this.model.get('data');
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
 
