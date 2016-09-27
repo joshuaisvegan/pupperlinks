@@ -30,7 +30,7 @@
     });
 
     var MainModel = Backbone.Model.extend({
-        url: 'login',
+        url: '/login',
         save: function() {
             return $.post(this.url, this.toJSON());
         }
@@ -52,6 +52,7 @@
                 window.location.hash = 'post';
             },
             'click #button': function(event) {
+                alert('vdvdf')
                 this.model.set({
                     email: $('#email').val(),
                     password: $('#password').val()
@@ -94,8 +95,6 @@
             }
         }
     });
-
-
 
     var LoginView = Backbone.View.extend({
         render: function(){

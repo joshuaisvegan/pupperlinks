@@ -141,4 +141,8 @@ app.post('/login', function (req, res) {
         });
     });
 });
+
+app.post('/messages', function (req, res) {
+    
+})
 app.listen(8081);
