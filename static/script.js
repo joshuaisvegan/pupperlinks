@@ -7,7 +7,6 @@
             'login': 'login'
         },
         main: function(){
-
             var mainModel = new MainModel();
             var mainView = new MainView({
                 el: '#main',
@@ -46,19 +45,14 @@
             this.$el.html(mainPage);
         },
         initialize: function(){
-
             $('#main').empty();
             this.render();
         },
         events: {
-
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
             },
-
             'click #loginButton': function(event) {
-                console.log('hello');
-
                 this.model.set({
                     email: $('#email').val(),
                     password: $('#password').val()
@@ -66,25 +60,21 @@
                     console.log('password matches');
 
                 });
-
             }
-
         }
     });
 
     var PostModel = Backbone.Model.extend({
-
-        url: 'post',
+        url: '/links',
         save: function() {
             return $.post(this.url, this.toJSON());
         }
-
     });
 
     var PostView = Backbone.View.extend({
         render: function(){
-            var postForm = $('#postForm').html();
-            this.$el.html(postForm);
+            var form = $('#postForm').html();
+            this.$el.html(form);
         },
         initialize: function(){
             $('#main').empty();
@@ -92,16 +82,13 @@
         },
         events: {
             'click #postButton': function(event){
-
                 this.model.set({
-                    headline: $("input[name|='headline']").val(),
+                    title: $("input[name|='headline']").val(),
                     link: $("input[name|='link']").val()
                 }).save().then(function(res) {
                     console.log('submitted');
                     window.location.hash = 'main';
-
                 });
-
             }
         }
     });
