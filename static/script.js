@@ -7,10 +7,12 @@
             'login': 'login'
         },
         main: function(){
+
             var mainModel = new MainModel();
             var mainView = new MainView({
                 el: '#main',
                 model: mainModel
+
             });
         },
         post: function(){
@@ -28,6 +30,7 @@
             });
         }
     });
+
 
     var MainModel = Backbone.Model.extend({
         url: '/login',
@@ -48,6 +51,7 @@
             this.render();
         },
         events: {
+
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
             },
@@ -60,6 +64,7 @@
                     console.log('password matches');
 
                 });
+
             }
 
         }
@@ -71,6 +76,7 @@
         save: function() {
             return $.post(this.url, this.toJSON());
         }
+
     });
 
     var PostView = Backbone.View.extend({
@@ -84,6 +90,7 @@
         },
         events: {
             'click #postButton': function(event){
+
                 this.model.set({
                     headline: $("input[name|='headline']").val(),
                     link: $("input[name|='link']").val()
@@ -92,6 +99,7 @@
                     window.location.hash = 'main';
 
                 });
+
             }
         }
     });
