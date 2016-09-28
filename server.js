@@ -220,7 +220,7 @@ app.get('/comments', function(req, res) {
 
 });
 
-app.post('/comments/:id', function(req, res) {
+app.post('/comments', function(req, res) {
 
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
     client.connect(function(err) {
