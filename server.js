@@ -79,7 +79,7 @@ app.post('/register', function(req, res){
 
                     req.session.user = {
 
-                        userID: results.rows[0].id,
+                        id: results.rows[0].id,
                         email: email
                     }
                     res.redirect('/#main');
@@ -128,8 +128,9 @@ app.post('/login', function (req, res) {
                     if (doesMatch == true) {
                         var id = results.rows[0].id;
                         req.session.user = {
-                            email: email,
-                            id: id
+                            id: id,
+                            email: email
+
                         }
                         res.sendStatus(200);
                     } else {
@@ -143,41 +144,43 @@ app.post('/login', function (req, res) {
 });
 
 app.post('/post', function (req, res) {
-    console.log(req.session)
+
     var headline = req.body.title,
         link = req.body.link,
         userid = 1;
 
-    if (!req.body.link.length) {
+    if (!req.session.user) {
+
+        res.sendStatus(403);
 
         console.log('error');
         return;
-    }
+    } else {
 
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
-    client.connect(function (err) {
-        if (err){
-            throw err;
-        }
-
-        var query = "INSERT INTO links(link, userid, content) VALUES($1, $2, $3) RETURNING id"
-        client.query(query, [link, userid, headline], function(err, results) {
-            if (err) {
-                console.log(err);
-
-            } else {
-                client.end();
-                console.log('it works');
-
-
-                res.sendStatus(200);
+        var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+        client.connect(function (err) {
+            if (err){
+                throw err;
             }
+
+            var query = "INSERT INTO links(link, userid, content) VALUES($1, $2, $3) RETURNING id"
+            client.query(query, [link, userid, headline], function(err, results) {
+                if (err) {
+                    console.log(err);
+
+                } else {
+                    client.end();
+                    console.log('it works');
+
+
+                    res.sendStatus(200);
+                }
+            });
         });
-    });
+    }
 });
 
 app.get('/links', function (req, res) {
-
 
     // if (!req.body.length) {
     //
@@ -212,13 +215,41 @@ app.get('/links', function (req, res) {
 
 app.get('/comments', function(req, res) {
 
-
-
-
-
+    console.log(req.params);
     res.sendStatus(200);
 
+});
 
-})
+app.post('/comments/:id', function(req, res) {
+
+    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    client.connect(function(err) {
+        if (err){
+            throw err;
+        }
+
+        var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
+        if (!req.body.parent_id) {
+            client.query(query, [null, req.session.user.id, req.body.link, req.body.comment], function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    client.end();
+                    res.sendStatus(200);
+                }
+            });
+
+        } else {
+            client.query(query, [req.body.parent_id, req.session.user.id, req.body.link, req.body.comment], function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    client.end();
+                    res.sendStatus(200);
+                }
+            });
+        }
+    });
+});
 
 app.listen(8081);
