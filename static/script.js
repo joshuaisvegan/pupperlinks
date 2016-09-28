@@ -112,6 +112,7 @@
         },
         events: {
             'click #newLinkButton': function(event) {
+                console.log('post');
                 window.location.hash = 'post';
             },
 
