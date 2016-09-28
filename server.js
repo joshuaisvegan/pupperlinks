@@ -19,12 +19,12 @@ var hashPassword = function (plainTextPassword, callback) {
         if (err) {
             return callback(err);
         }
-        console.log(salt);
+
         bcrypt.hash(plainTextPassword, salt, function(err, hash) {
             if (err) {
                 return callback(err);
             }
-            console.log(hash);
+
             callback(null, hash);
         });
     });
@@ -78,7 +78,7 @@ app.post('/register', function(req, res){
                     client.end();
 
                     req.session.user = {
-                        data: req.body.firstname + ' ' + req.body.lastname,
+
                         userID: results.rows[0].id,
                         email: email
                     }
@@ -95,7 +95,7 @@ app.get('/register', function(req, res, next) {
 
 
 app.post('/login', function (req, res) {
-    console.log(req.body.email);
+
 
     if (!req.body.email.length || !req.body.password.length) {
 
@@ -111,24 +111,24 @@ app.post('/login', function (req, res) {
         var email = req.body.email;
 
         client.query(query, [email], function (err, results) {
-            console.log(results.rows);
+
             if (!results.rows.length) {
                 err = true;
             }
             if (err) {
-                console.log('wrong login')
+
                 console.log(err)
             } else {
                 client.end();
                 checkPassword(req.body.password, results.rows[0].hash, function (err, doesMatch) {
                     if (err) {
-                        console.log('nie wiem')
+
                         console.log(err)
                     }
                     if (doesMatch == true) {
                         var id = results.rows[0].id;
                         req.session.user = {
-                            name: name,
+                            email: email,
                             id: id
                         }
                         res.sendStatus(200);
@@ -143,10 +143,11 @@ app.post('/login', function (req, res) {
 });
 
 app.post('/post', function (req, res) {
-    var headline = req.body.headline,
+    console.log(req.session)
+    var headline = req.body.title,
         link = req.body.link,
         userid = 1;
-    console.log(req.body);
+
     if (!req.body.link.length) {
 
         console.log('error');
@@ -167,7 +168,7 @@ app.post('/post', function (req, res) {
             } else {
                 client.end();
                 console.log('it works');
-                console.log(results);
+
 
                 res.sendStatus(200);
             }
@@ -177,7 +178,7 @@ app.post('/post', function (req, res) {
 
 app.get('/links', function (req, res) {
 
-    console.log(req.body);
+
     // if (!req.body.length) {
     //
     //     console.log('error');
@@ -192,7 +193,7 @@ app.get('/links', function (req, res) {
 
         var query = "SELECT * FROM links"
         client.query(query, function(err, results) {
-            console.log(results.rows);
+
             if (err) {
                 console.log(err);
 
@@ -202,11 +203,21 @@ app.get('/links', function (req, res) {
                 res.json({
 
                     data: results.rows
-                    
+
                 });
             }
         });
     });
+})
+
+app.get('/comments', function(req, res) {
+
+
+
+
+
+    res.sendStatus(200);
+
 
 })
 
