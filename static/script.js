@@ -68,13 +68,14 @@
             this.$el.html(mainPage);
 
             var linksFromDB = this.model.get('data');
+            console.log(linksFromDB)
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
 
         },
         initialize: function(){
             $('#main').empty();
-            this.render();
+
             var view = this;
             this.model.on('change', function () {
                view.render();
