@@ -168,10 +168,6 @@
         events: {
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
-            },
-
-            'click #commentsButton': function (event) {
-                var buttonId = $(this).atrr('id');
             }
         }
     });
@@ -206,7 +202,13 @@
     });
 //    ------------------------------------------------------------------------------------
     var CommentsModel = Backbone.Model.extend({
-        url: '/comments'
+        url: '/comments',
+        initialize: function() {
+            this.fetch();
+        },
+        save: function() {
+            return $.post(this.url, this.toJSON());
+        }
     });
 
     var CommentsView = Backbone.View.extend({
@@ -216,6 +218,9 @@
         },
         initialize: function() {
             $('#main').empty();
+            this.model.save().then(function(res){
+                console.log('send');
+            });
             this.render();
         }
     });
