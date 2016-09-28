@@ -51,6 +51,9 @@
                 el: '#main',
                 model: loggedinMainModel
             });
+            var postButtonView = new PostButtonView({
+                el: '#postButtonContainer'
+            });
         }
     });
 
@@ -82,6 +85,23 @@
             }
         }
     });
+
+    //------------------------------------------------------------------------------------
+
+    var PostButtonView = Backbone.View.extend({
+        render: function(){
+            var postButton = $('#postButton').html();
+            this.$el.html(postButton);
+        },
+        initialize: function(){
+            this.render();
+        },
+        events: {
+            'click #newLinkButton': function(event) {
+                console.log('post');
+                window.location.hash = 'post';
+            }            }
+    });
 //    ------------------------------------------------------------------------------------
     var MainModel = Backbone.Model.extend({
         url: '/links',
@@ -111,54 +131,50 @@
            });
         },
         events: {
-            'click #newLinkButton': function(event) {
-                console.log('post');
-                window.location.hash = 'post';
-            },
-
             'click #commentsButton': function (event) {
                 window.location.hash = 'comments';
             }
         }
     });
     //    ------------------------------------------------------------------------------------
-        var LoggedinMainModel = Backbone.Model.extend({
-            url: '/links',
+    var LoggedinMainModel = Backbone.Model.extend({
+        url: '/links',
 
-            initialize: function() {
-                this.fetch();
-            }
-        });
+        initialize: function() {
+            this.fetch();
+        }
+    });
 
 
-        var LoggedinMainView = Backbone.View.extend({
-            render: function(){
-                var mainPage = $('#linkPage').html();
-                this.$el.html(mainPage);
+    var LoggedinMainView = Backbone.View.extend({
+        render: function(){
+            var mainPage = $('#linkPage').html();
+            this.$el.html(mainPage);
 
-                var linksFromDB = this.model.get('data');
-                var renderedLinks = Handlebars.templates.links(linksFromDB);
-                $('#linkContainer').html(renderedLinks);
+            var linksFromDB = this.model.get('data');
+            var renderedLinks = Handlebars.templates.links(linksFromDB);
+            $('#linkContainer').html(renderedLinks);
+        },
+        initialize: function(){
+            $('#main').empty();
+            $('#loginSlot').empty();
+            $('#postButtonContainer').empty();
+            this.render();
+            var view = this;
+            this.model.on('change', function () {
+               view.render();
+           });
+        },
+        events: {
+            'click #newLinkButton': function(event) {
+                window.location.hash = 'post';
             },
-            initialize: function(){
-                $('#main').empty();
-                $('#loginSlot').empty();
-                this.render();
-                var view = this;
-                this.model.on('change', function () {
-                   view.render();
-               });
-            },
-            events: {
-                'click #newLinkButton': function(event) {
-                    window.location.hash = 'post';
-                },
 
-                'click #commentsButton': function (event) {
-                    var buttonId = $(this).atrr('id');
-                }
+            'click #commentsButton': function (event) {
+                var buttonId = $(this).atrr('id');
             }
-        });
+        }
+    });
 //    ------------------------------------------------------------------------------------
     var PostModel = Backbone.Model.extend({
         url: '/post',
@@ -183,26 +199,26 @@
                     link: $("input[name|='link']").val()
                 }).save().then(function(res) {
                     console.log('submitted');
-                    window.location.hash = 'main';
+                    window.location.hash = 'loggedinMain';
                 });
             }
         }
     });
 //    ------------------------------------------------------------------------------------
-var CommentsModel = Backbone.Model.extend({
-    url: '/comments'
-});
+    var CommentsModel = Backbone.Model.extend({
+        url: '/comments'
+    });
 
-var CommentsView = Backbone.View.extend({
-    render: function(){
-        var comments = $('#postForm').html();
-        this.$el.html(comments);
-    },
-    initialize: function() {
-        $('#main').empty();
-        this.render();
-    }
-});
+    var CommentsView = Backbone.View.extend({
+        render: function(){
+            var comments = $('#commentView').html();
+            this.$el.html(comments);
+        },
+        initialize: function() {
+            $('#main').empty();
+            this.render();
+        }
+    });
 
 
     var router = new Router();
