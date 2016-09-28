@@ -1,3 +1,29 @@
+@media only screen and (max-device-width: 480px) {
+		#body {
+			width: 400px;
+		}
+
+		div#header {
+			background-image: url(media-queries-phone.jpg);
+			height: 93px;
+			position: relative;
+		}
+
+		div#header h1 {
+			font-size: 140%;
+		}
+
+		#content {
+			float: none;
+			width: 100%;
+		}
+
+		#navigation {
+			float:none;
+			width: auto;
+		}
+	}
+
 #body {
     margin: 0px;
 }
@@ -24,6 +50,7 @@
 .pug {
     height: 60px;
     width: auto;
+    max-width: 100%;
 }
 
 h1 {
@@ -37,10 +64,8 @@ h1 {
 #loginForm{
     display:inline-block;
     float:right;
-    position: relative;
-    margin-left: 150px;
-    margin-top: 4px;
-    margin-right: 3px
+
+	border: solid black 1px;
 }
 
 #emailLabel {
@@ -110,6 +135,8 @@ a {
     transition: 0s
 }
 
-#postButton {
+#postButtonContainer {
     margin-top: 20px;
+	position: absolute;
+	right: 0px;
 }
