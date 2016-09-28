@@ -14,8 +14,8 @@
             <div class="pugDiv">
                 <img src="pug.gif" class="pug"></img>
             </div>
-            <div id="loginSlot">
             </div>
+            <div id="loginSlot">
         </div>
     </div>
 
@@ -40,7 +40,8 @@
                 <script id="links" type="text/handlebars">
                 {{#.}}
                 <li>
-                <a id={{id}} href={{link}}>{{content}}</a>
+                <a href="{{link}}">{{content}}</a>
+                <a id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
                 {{/.}}
                 </script>
             </ul>
