@@ -31,6 +31,8 @@
 .header {
     background: black;
     height: 63px;
+	overflow: hidden;
+	height: 64px;
 }
 
 #logo {
