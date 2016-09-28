@@ -40,7 +40,8 @@
                 <script id="links" type="text/handlebars">
                 {{#.}}
                 <li>
-                <a id={{id}} href={{link}}>{{content}}</a>
+                <a href="{{link}}">{{content}}</a>
+                <a id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
                 {{/.}}
                 </script>
             </ul>
