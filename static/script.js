@@ -14,6 +14,8 @@
         routes: {
             'main': 'main',
             'post': 'post',
+            'comments': 'comments',
+            'loggedinMain': 'loggedinMain'
         },
         main: function(){
             var mainModel = new MainModel();
@@ -34,7 +36,22 @@
                 model: postModel
             });
         },
+        comments: function() {
+            var commentsModel = new CommentsModel();
+            var commentsView = new CommentsView({
+                el: '#main',
+                model: commentsModel
+            });
+        },
+        loggedinMain: function() {
+            var loggedinMainModel = new LoggedinMainModel();
+            var loggedinMainView = new LoggedinMainView({
+
+            });
+        }
     });
+
+//------------------------------------------------------------------------------------
     var LoginModel = Backbone.Model.extend({
         url: '/login',
         save: function() {
@@ -50,9 +67,20 @@
         },
         initialize: function(){
             this.render();
+        },
+        events: {
+            'click #loginButton': function(event) {
+                this.model.set({
+                    email: $('#email').val(),
+                    password: $('#password').val()
+                }).save().then(function(res) {
+                    console.log('password matches');
+                    window.location.hash = 'loggedinMain';
+                });
+            }
         }
     });
-
+//    ------------------------------------------------------------------------------------
     var MainModel = Backbone.Model.extend({
         url: '/links',
 
@@ -84,18 +112,51 @@
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
             },
-            'click #loginButton': function(event) {
-                this.model.set({
-                    email: $('#email').val(),
-                    password: $('#password').val()
-                }).save().then(function(res) {
-                    console.log('password matches');
 
-                });
+            'click #commentsButton': function (event) {
+                var buttonId = $(this).atrr('id');
             }
         }
     });
+    //    ------------------------------------------------------------------------------------
+        var LoggedinMainModel = Backbone.Model.extend({
+            url: '/links',
 
+            initialize: function() {
+                this.fetch();
+            }
+        });
+
+
+        var LoggedinMainView = Backbone.View.extend({
+            render: function(){
+                var mainPage = $('#linkPage').html();
+                this.$el.html(mainPage);
+
+                var linksFromDB = this.model.get('data');
+                var renderedLinks = Handlebars.templates.links(linksFromDB);
+                $('#linkContainer').html(renderedLinks);
+
+            },
+            initialize: function(){
+                $('#main').empty();
+                this.render();
+                var view = this;
+                this.model.on('change', function () {
+                   view.render();
+               });
+            },
+            events: {
+                'click #newLinkButton': function(event) {
+                    window.location.hash = 'post';
+                },
+
+                'click #commentsButton': function (event) {
+                    var buttonId = $(this).atrr('id');
+                }
+            }
+        });
+//    ------------------------------------------------------------------------------------
     var PostModel = Backbone.Model.extend({
         url: '/post',
         save: function() {
@@ -124,7 +185,21 @@
             }
         }
     });
+//    ------------------------------------------------------------------------------------
+var CommentsModel = Backbone.Model.extend({
+    url: '/comments'
+});
 
+var CommentsView = Backbone.View.extend({
+    render: function(){
+        var comments = $('#postForm').html();
+        this.$el.html(comments);
+    },
+    initialize: function() {
+        $('#main').empty();
+        this.render();
+    }
+});
 
 
     var router = new Router();
