@@ -178,11 +178,11 @@ app.post('/post', function (req, res) {
 app.get('/links', function (req, res) {
 
     console.log(req.body);
-    if (!req.body.link.length) {
-
-        console.log('error');
-        return;
-    }
+    // if (!req.body.length) {
+    //
+    //     console.log('error');
+    //     return;
+    // }
 
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
     client.connect(function (err) {
@@ -192,13 +192,18 @@ app.get('/links', function (req, res) {
 
         var query = "SELECT * FROM links"
         client.query(query, function(err, results) {
+            console.log(results.rows);
             if (err) {
                 console.log(err);
 
             } else {
                 client.end();
 
-                res.redirect('/#main');
+                res.json({
+
+                    data: results.rows
+                    
+                });
             }
         });
     });
