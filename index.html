@@ -29,25 +29,28 @@
             <a href="/registration.html" id="registerLink">Don't have a login? Click here to register!</a>
         </form>
     </div>
-        <div id="main">
-        </div>
+    <div id="main">
+    </div>
 
 
 
-        <div id="linkPage" style="display: none">
-            <div id="linkContainer">
+    <div id="linkPage" style="display: none">
+        <div id="linkContainer">
+            <ul>
                 <script id="links" type="text/handlebars">
                 {{#.}}
-                <a href={{link}}>{{content}}</a>
+                <li>
+                <a id={{id}} href={{link}}>{{content}}</a>
                 {{/.}}
                 </script>
-            </div>
+            </ul>
         </div>
+    </div>
 
-        <div id="postButton">
-            <button type="button" id="newLinkButton">POST A PUPPER!</button>
-            <p></p>
-        </div>
+    <div id="postButton">
+        <button type="button" id="newLinkButton">POST A PUPPER!</button>
+        <p></p>
+    </div>
 
 
     <div id="postForm" style="display: none">
