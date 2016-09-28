@@ -14,7 +14,7 @@
         routes: {
             'main': 'main',
             'post': 'post',
-            'comments': 'comments',
+            'comments/:id': 'comments',
             'loggedinMain': 'loggedinMain'
         },
         main: function(){
@@ -36,8 +36,10 @@
                 model: postModel
             });
         },
-        comments: function() {
-            var commentsModel = new CommentsModel();
+        comments: function(id) {
+            var commentsModel = new CommentsModel({
+                id: id
+            });
             var commentsView = new CommentsView({
                 el: '#main',
                 model: commentsModel
@@ -46,7 +48,8 @@
         loggedinMain: function() {
             var loggedinMainModel = new LoggedinMainModel();
             var loggedinMainView = new LoggedinMainView({
-
+                el: '#main',
+                model: loggedinMainModel
             });
         }
     });
@@ -63,7 +66,6 @@
         render: function(){
             var login = $('#loginContainer').html();
             this.$el.html(login);
-            console.log(login);
         },
         initialize: function(){
             this.render();
@@ -96,7 +98,6 @@
             this.$el.html(mainPage);
 
             var linksFromDB = this.model.get('data');
-            console.log(linksFromDB)
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
 
@@ -115,7 +116,7 @@
             },
 
             'click #commentsButton': function (event) {
-                var buttonId = $(this).atrr('id');
+                window.location.hash = 'comments';
             }
         }
     });
@@ -137,10 +138,10 @@
                 var linksFromDB = this.model.get('data');
                 var renderedLinks = Handlebars.templates.links(linksFromDB);
                 $('#linkContainer').html(renderedLinks);
-
             },
             initialize: function(){
                 $('#main').empty();
+                $('#loginSlot').empty();
                 this.render();
                 var view = this;
                 this.model.on('change', function () {
