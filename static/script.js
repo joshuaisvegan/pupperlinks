@@ -38,7 +38,7 @@
         },
         comments: function(id) {
             var commentsModel = new CommentsModel({
-                link_id: id
+                id: id
             });
             var commentsView = new CommentsView({
                 el: '#main',
@@ -218,7 +218,8 @@
         },
         initialize: function() {
             $('#main').empty();
-            this.model.save().then(function(res){
+            console.log(this.model.id);
+            this.model.id.save().then(function(res){
                 console.log('send');
             });
             this.render();
