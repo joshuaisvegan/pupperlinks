@@ -98,7 +98,7 @@
     });
 
     var PostModel = Backbone.Model.extend({
-        url: '/links',
+        url: '/post',
         save: function() {
             return $.post(this.url, this.toJSON());
         }
