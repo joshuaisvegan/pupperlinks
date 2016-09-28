@@ -38,7 +38,7 @@
         },
         comments: function(id) {
             var commentsModel = new CommentsModel({
-                id: id
+                link_id: id
             });
             var commentsView = new CommentsView({
                 el: '#main',
