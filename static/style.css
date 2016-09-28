@@ -95,8 +95,28 @@ a {
 
 }
 
-#postForm{
+#userPost {
+	width: 200px;
+	height:200px;
+	padding-top: 70px;
+	padding-bottom: 10px;
+	padding-left: 50px;
+	padding-right: 10px;
     margin-top: 20px;
+	border: solid black 3px;
+	margin-left: 75px;
+}
+
+#regForm {
+	width: 200px;
+	height:200px;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	padding-left: 50px;
+	padding-right: 10px;
+	margin-top: 20px;
+	border: solid black 3px;
+	margin-left: 75px;
 }
 
 .button {
