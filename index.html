@@ -14,8 +14,8 @@
             <div class="pugDiv">
                 <img src="pug.gif" class="pug"></img>
             </div>
-            </div>
-            <div id="loginSlot">
+        </div>
+        <div id="loginSlot">
         </div>
     </div>
 
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-<div id="postButtonContainer"></div>
+    <div id="postButtonContainer"></div>
 
     <div id="postButton" style="display: none">
         <button type="button" id="newLinkButton">POST A PUPPER!</button>
@@ -58,7 +58,7 @@
 
     <div id="postForm" style="display: none">
         <form>
-            <div id="postForm">
+            <div class="form">
                 <label for="input">HEADLINE</label>
                 <input type="text" name="headline">
             </div>
@@ -79,6 +79,14 @@
         <div class="commentDiv">{{comment}}</div>
         {{/comments}}
         </script>
+        <div id="commentForm">
+            <form>
+                <label for="input">COMMENT</label>
+                <input name="commentInput" type="text">
+        </div>
+            <button type="button" id="commentButton">SUBMIT</button>
+            </form>
+
     </div>
 
 
