@@ -70,6 +70,18 @@
         </form>
     </div>
 
+    <div id="commentView" style="display: none">
+        <script id="comments" type="text/handlebars">
+        {{#links}}
+        <h1><a href="{{link}}">{{content}}</a><</h1><br><br>
+        {{/links}}
+        {{#comments}}
+        <div class="commentDiv">{{comment}}</div>
+        {{/comments}}
+        </script>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
     <script src="assets/underscore.js"></script>
