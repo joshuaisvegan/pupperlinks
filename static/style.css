@@ -1,3 +1,9 @@
+#stefansDiv {
+	margin-top: 20px;
+	display:inline-block;
+    float:right;
+}
+
 @media only screen and (max-device-width: 480px) {
 		#body {
 			width: 400px;
@@ -38,7 +44,7 @@
 
 #logo {
     position: absolute;
-    width: 700px;
+    width: 50%;
     margin-top: 8px;
     margin-bottom: 8px;
     margin-left: 4px;
@@ -83,7 +89,7 @@ h1 {
     float:right;
 }
 
-#emailLabel {
+/*#emailLabel {
     width: 200px;
     margin: 0px;
     color: white
@@ -91,7 +97,7 @@ h1 {
 
 #passwordLabel {
     color: white;
-}
+}*/
 
 #loginButton {
     display: inline;
