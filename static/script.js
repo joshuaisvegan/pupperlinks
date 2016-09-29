@@ -210,8 +210,13 @@
             this.fetch();
         },
         save: function() {
-            console.log(this.toJSON());
-            return $.post('/comments', this.toJSON());
+            var latestComment = {
+                comment: this.changed.comment,
+                id: this.id
+            };
+
+            console.log(latestComment);
+            return $.post('/comments', latestComment);
         }
 
     });
@@ -232,23 +237,21 @@
             this.render();
             var view = this;
             this.model.on('change', function () {
-               view.render();
+                view.render();
            });
-
         },
         events: {
             'click #commentButton': function(event) {
+                var view = this;
                 this.model.set({
                     comment: $("input[name|='commentInput']").val(),
                 }).save().then(function(res) {
                     console.log('post saved');
                     view.render();
-
                 });
             }
         }
     });
-
 
     var router = new Router();
     Backbone.history.start();
