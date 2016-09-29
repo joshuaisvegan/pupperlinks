@@ -63,12 +63,23 @@ h1 {
     font-size: 60px;
 }
 
+#logoutAndReturnContainer {
+	margin-top: 40px;
+	margin-right: 10px;
+    display:inline-block;
+    float:right;
+	font: white;
+}
+
+#main {
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
 #loginForm{
 	margin-top: 5px;
     display:inline-block;
     float:right;
-
-	border: solid black 1px;
 }
 
 #emailLabel {
