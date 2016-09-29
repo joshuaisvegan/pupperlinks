@@ -222,7 +222,6 @@
             this.$el.html(comments);
 
             var commentsFromDB = this.model.get('data');
-            console.log(commentsFromDB);
             var renderedComments = Handlebars.templates.comments(commentsFromDB);
             $('#commentsContainer').html(renderedComments);
 
@@ -234,16 +233,16 @@
             this.model.on('change', function () {
                view.render();
            });
-
         },
         events: {
+
             'click #commentButton': function(event) {
+                var view = this;
                 this.model.set({
                     comment: $("input[name|='commentInput']").val(),
                 }).save().then(function(res) {
                     console.log('post saved');
                     view.render();
-
                 });
             }
         }
