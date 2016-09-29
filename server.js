@@ -143,6 +143,13 @@ app.post('/login', function (req, res) {
     });
 });
 
+app.get('/logout', function (req, res) {
+
+    req.session = null;
+    res.redirect('/#main');
+
+})
+
 app.post('/post', function (req, res) {
 
     var headline = req.body.title,
