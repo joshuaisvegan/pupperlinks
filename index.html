@@ -36,8 +36,6 @@
     <div id="main">
     </div>
 
-
-
     <div id="linkPage" style="display: none">
         <div id="linkContainer">
             <ul>
@@ -73,14 +71,13 @@
     </div>
 
     <div id="commentView" style="display: none">
-        <script id="comments" type="text/handlebars">
-        {{#links}}
-        <h1><a href="{{link}}">{{content}}</a><</h1><br><br>
-        {{/links}}
-        {{#comments}}
-        <div class="commentDiv">{{comment}}</div>
-        {{/comments}}
-        </script>
+        <div id="commentsContainer"></div>
+      <script id="comments" type="text/handlebars">
+      {{#.}}
+      <h1><a href="{{link}}">{{content}}</a><</h1><br><br>
+      <div class="commentDiv">{{comment}}</div>
+      {{/.}}
+      </script>
         <div id="commentForm">
             <form>
                 <label for="input">COMMENT</label>
