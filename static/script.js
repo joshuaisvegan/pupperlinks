@@ -210,10 +210,8 @@
             this.fetch();
         },
         save: function() {
-
             console.log(this.toJSON());
             return $.post('/comments', this.toJSON());
-
         }
 
     });
@@ -222,11 +220,21 @@
         render: function(){
             var comments = $('#commentView').html();
             this.$el.html(comments);
+
+            var commentsFromDB = this.model.get('data');
+            console.log(commentsFromDB);
+            var renderedComments = Handlebars.templates.comments(commentsFromDB);
+            $('#commentsContainer').html(renderedComments);
+
         },
         initialize: function() {
             $('#main').empty();
-
             this.render();
+            var view = this;
+            this.model.on('change', function () {
+               view.render();
+           });
+
         },
         events: {
             'click #commentButton': function(event) {
@@ -234,10 +242,11 @@
                     comment: $("input[name|='commentInput']").val(),
                 }).save().then(function(res) {
                     console.log('post saved');
+                    view.render();
+
                 });
             }
         }
-
     });
 
 
