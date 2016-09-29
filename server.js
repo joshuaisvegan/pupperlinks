@@ -236,7 +236,7 @@ app.get('/comments/:id', function(req, res) {
                 console.log(err);
             } else {
                 client.end();
-                console.log(results.rows)
+
                 res.json({
                     data: results.rows
                 });
@@ -253,20 +253,39 @@ app.post('/comments', function(req, res) {
             throw err;
         }
 
-        var query = "INSERT INTO comments(user_id, link_id, comment) VALUES($1, $2, $3) RETURNING id;";
         if (!req.body.parent_id) {
+            var query = "INSERT INTO comments(user_id, link_id, comment) VALUES($1, $2, $3) RETURNING id;";
             console.log('no parent')
             client.query(query, [req.session.user.id, req.body.id, req.body.comment], function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
-                    client.end();
-                    res.sendStatus(200);
+                    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                    client.connect(function(err) {
+                        if (err){
+                            throw err;
+                        }
+
+                        var query = "SELECT * FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+
+                        client.query(query, [req.body.id], function (err, results) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                client.end();
+
+                                res.json({
+                                    data: results.rows
+                                });
+                            }
+                        });
+                    });
                 }
             });
 
         } else {
-            client.query(query, [req.body.parent_id, req.session.user.id, req.body.link, req.body.comment], function (err, results) {
+            var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
+            client.query(query, [req.body.parent_id, req.session.user.id, req.body.id, req.body.comment], function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
