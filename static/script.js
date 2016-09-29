@@ -124,7 +124,7 @@
         },
         initialize: function(){
             $('#main').empty();
-
+            $('#postButtonContainer').empty();
             var view = this;
             this.model.on('change', function () {
                view.render();
@@ -186,6 +186,7 @@
         },
         initialize: function(){
             $('#main').empty();
+            $('#postButtonContainer').empty();
             this.render();
         },
         events: {
@@ -209,8 +210,10 @@
             this.fetch();
         },
         save: function() {
+
             console.log(this.toJSON());
             return $.post('/comments', this.toJSON());
+
         }
 
     });
@@ -222,6 +225,14 @@
         },
         initialize: function() {
             $('#main').empty();
+
+
+            console.log(this.model.id);
+            this.model.save().then(function(res){
+                console.log('send');
+            });
+
+
             this.render();
         },
         events: {
