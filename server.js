@@ -213,26 +213,29 @@ app.get('/links', function (req, res) {
     });
 })
 
-app.get('/comments', function(req, res) {
-    console.log(req.body)
+app.get('/comments/:id', function(req, res) {
+
+
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
-    // client.connect(function(err) {
-    //     if (err){
-    //         throw err;
-    //     }
-    //
-    //     var query = "SELECT * FROM comments WHERE ;";
-    //
-    //     client.query(query, function (err, results) {
-    //         if (err) {
-    //             console.log(err);
-    //         } else {
-    //             client.end();
-    //             console.log('gsfgdfg')
-    //             res.sendStatus(200);
-    //         }
-    //     });
-    // });
+    client.connect(function(err) {
+        if (err){
+            throw err;
+        }
+
+        var query = "SELECT * FROM comments WHERE comments.link_id = $1;";
+
+        client.query(query, [req.params.id], function (err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+                client.end();
+                console.log(results.rows)
+                res.json({
+                    data: results.rows
+                });
+            }
+        });
+    });
 });
 
 app.post('/comments', function(req, res) {
@@ -243,9 +246,10 @@ app.post('/comments', function(req, res) {
             throw err;
         }
 
-        var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
+        var query = "INSERT INTO comments(user_id, link_id, comment) VALUES($1, $2, $3) RETURNING id;";
         if (!req.body.parent_id) {
-            client.query(query, [null, req.session.user.id, req.body.link, req.body.comment], function (err, results) {
+            console.log('no parent')
+            client.query(query, [req.session.user.id, req.body.id, req.body.comment], function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
