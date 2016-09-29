@@ -63,6 +63,11 @@ h1 {
     font-size: 60px;
 }
 
+#main {
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
 #loginForm{
 	margin-top: 5px;
     display:inline-block;
