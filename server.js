@@ -229,7 +229,7 @@ app.get('/comments/:id', function(req, res) {
             throw err;
         }
 
-        var query = "SELECT * FROM comments WHERE comments.link_id = $1;";
+        var query = "SELECT * FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
 
         client.query(query, [req.params.id], function (err, results) {
             if (err) {
