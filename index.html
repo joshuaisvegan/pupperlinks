@@ -44,9 +44,9 @@
             <ul>
                 <script id="links" type="text/handlebars">
                 {{#.}}
-                <li>
-                <a href="{{link}}">{{content}}</a><br>
-                <a id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
+                <li id="storyContainer">
+                <a class="mainStory" href="{{link}}">{{content}}</a><br>
+                <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
                 {{/.}}
                 </script>
             </ul>
