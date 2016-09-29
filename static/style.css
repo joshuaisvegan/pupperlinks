@@ -29,6 +29,7 @@
 }
 
 .header {
+	min-width: 960px;
     background: black;
     height: 63px;
 	overflow: hidden;
