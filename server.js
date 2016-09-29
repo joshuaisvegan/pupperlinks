@@ -8,6 +8,16 @@ const credentials = require('./credentials');
 const bcrypt = require('bcrypt');
 const url = require('url');
 
+
+
+var checkStatus = function(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        return res.sendStatus(401);
+    }
+};
+
 // app.engine('handlebars', hb.engine);
 // app.set('view engine', 'handlebars');
 //
@@ -151,7 +161,7 @@ app.get('/logout', function (req, res) {
 
 })
 
-app.post('/post', function (req, res) {
+app.post('/post', checkStatus, function (req, res) {
 
 
     if (url.parse(req.body.link).host == null) {
@@ -285,7 +295,7 @@ app.get('/comments/:id', function(req, res) {
     });
 });
 
-app.post('/comments', function(req, res) {
+app.post('/comments', checkStatus, function(req, res) {
     console.log(req.body)
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
     client.connect(function(err) {
