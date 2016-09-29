@@ -214,9 +214,13 @@
                 comment: this.changed.comment,
                 id: this.id
             };
+            var model = this;
 
             console.log(latestComment);
-            return $.post('/comments', latestComment);
+            return $.post('/comments', latestComment).then(function(comments) {
+                model.set(comments);
+                console.log(comments);
+            });
         }
 
     });
@@ -247,6 +251,7 @@
                     comment: $("input[name|='commentInput']").val(),
                 }).save().then(function(res) {
                     console.log('post saved');
+                    console.log(res);
                     view.render();
                 });
             }
