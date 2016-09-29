@@ -15,12 +15,15 @@
                 <img src="pug.gif" class="pug"></img>
 
         </div>-->
-        <div id="logoutAndReturnContainer">
-            <a href="/logout" id="logOut">LOG OUT</a>
-            <a id="returnToMain" href="/#loggedinMain">Return to main page</a>
-        </div>
+
         <div id="loginSlot">
         </div>
+        <div id="logOutAndReturnSlot">
+        </div>
+    </div>
+
+    <div id="logoutAndReturnContainer" style:"display: none">
+        <p id="logoutAndReturnText"><a id="returnToMain" href="/#loggedinMain">Return to main page</a> || <a href="/logout" id="logOut">LOG OUT</a></p>
     </div>
 
     <div id="loginContainer" style="display: none">
@@ -42,7 +45,7 @@
                 <script id="links" type="text/handlebars">
                 {{#.}}
                 <li>
-                <a href="{{link}}">{{content}}</a>
+                <a href="{{link}}">{{content}}</a><br>
                 <a id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
                 {{/.}}
                 </script>
@@ -74,14 +77,14 @@
         <div id="commentsContainer"></div>
       <script id="comments" type="text/handlebars">
       {{#.}}
-      <h1><a href="{{link}}">{{content}}</a><</h1><br><br>
+      <h1><a id="storyLink" href="{{link}}">{{content}}</a><</h1><br><br>
       <div class="commentDiv">{{comment}}</div>
-      <br><br><button type="button" id="replyButton">REPLY</button>
+      <br><button type="button" id="replyButton">REPLY</button>
       {{/.}}
       </script>
         <div id="commentForm">
             <form>
-                <label for="input">COMMENT</label>
+                <br><br><label for="input">COMMENT</label>
                 <input name="commentInput" type="text">
         </div>
             <button type="button" id="commentButton">SUBMIT</button>
