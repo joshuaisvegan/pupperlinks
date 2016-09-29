@@ -3,7 +3,6 @@
     var templates = document.querySelectorAll('script[type="text/handlebars"]');
 
     Handlebars.templates = Handlebars.templates || {};
-    console.log(Handlebars.templates);
 
     Array.prototype.slice.call(templates).forEach(function(script) {
         Handlebars.templates[script.id] = Handlebars.compile(script.innerHTML);
@@ -35,6 +34,9 @@
                 el: '#main',
                 model: postModel
             });
+            var logoutView = new LogoutView({
+                el: '#logOutAndReturnSlot'
+            });
         },
         comments: function(id) {
             var commentsModel = new CommentsModel({
@@ -53,6 +55,9 @@
             });
             var postButtonView = new PostButtonView({
                 el: '#postButtonContainer'
+            });
+            var logoutView = new LogoutView({
+                el: '#logOutAndReturnSlot'
             });
         }
     });
@@ -231,7 +236,6 @@
             this.$el.html(comments);
 
             var commentsFromDB = this.model.get('data');
-            console.log(commentsFromDB);
             var renderedComments = Handlebars.templates.comments(commentsFromDB);
             $('#commentsContainer').html(renderedComments);
 
@@ -251,10 +255,21 @@
                     comment: $("input[name|='commentInput']").val(),
                 }).save().then(function(res) {
                     console.log('post saved');
-                    console.log(res);
                     view.render();
                 });
             }
+        }
+    });
+//......................................................................................
+    var LogoutView = Backbone.View.extend({
+        render: function() {
+            var logout = $('#logoutAndReturnContainer').html();
+            console.log(logout);
+            this.$el.html(logout);
+
+        },
+        initialize: function() {
+            this.render();
         }
     });
 
