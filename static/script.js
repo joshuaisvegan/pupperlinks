@@ -124,7 +124,7 @@
         },
         initialize: function(){
             $('#main').empty();
-
+            $('#postButtonContainer').empty();
             var view = this;
             this.model.on('change', function () {
                view.render();
@@ -186,6 +186,7 @@
         },
         initialize: function(){
             $('#main').empty();
+            $('#postButtonContainer').empty();
             this.render();
         },
         events: {
