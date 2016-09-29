@@ -6,6 +6,7 @@ const csrf = require('csurf');
 const hb = require('express-handlebars');
 const credentials = require('./credentials');
 const bcrypt = require('bcrypt');
+const url = require('url');
 
 // app.engine('handlebars', hb.engine);
 // app.set('view engine', 'handlebars');
@@ -152,9 +153,17 @@ app.get('/logout', function (req, res) {
 
 app.post('/post', function (req, res) {
 
+
+    if (url.parse(req.body.link).host == null) {
+        res.sendStatus(403);
+        return;
+    }
+
+
     var headline = req.body.title,
         link = req.body.link,
         userid = 1;
+
 
     if (!req.session.user) {
 
@@ -229,12 +238,43 @@ app.get('/comments/:id', function(req, res) {
             throw err;
         }
 
-        var query = "SELECT * FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+        var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
 
         client.query(query, [req.params.id], function (err, results) {
             if (err) {
                 console.log(err);
             } else {
+
+                var comments = results.rows;
+
+                var nodes = [];
+                var toplevelNodes = [];
+                var lookupList = {};
+
+                for (var i = 0; results.rows[i]; i++) {
+                    var n = {
+                        id: comments[i].id,
+                        parent_id: ((comments[i].parent_id == null) ? null : comments[i].parent_id),
+                        children: [],
+                        user_id: comments[i].user_id,
+                        comment: comments[i].comment,
+                        link: comments[i].link,
+                        content: comments[i].content
+                    };
+                    lookupList[n.id] = n;
+                    nodes.push(n);
+                        if (n.parent_id == null) {
+                    toplevelNodes.push(n);
+                    }
+                }
+
+                for (var i = 0; i < nodes.length; i++) {
+                    var n = nodes[i];
+                    if (!(n.parent_id == null)) {
+                        lookupList[n.parent_id].children = lookupList[n.parent_id].children.concat([n]);
+                    }
+                }
+
                 client.end();
 
                 res.json({
@@ -273,7 +313,7 @@ app.post('/comments', function(req, res) {
                                 console.log(err);
                             } else {
                                 client.end();
-
+                                console.log(results.rows);
                                 res.json({
                                     data: results.rows
                                 });
@@ -282,6 +322,10 @@ app.post('/comments', function(req, res) {
                     });
                 }
             });
+
+
+
+
 
         } else {
             var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
