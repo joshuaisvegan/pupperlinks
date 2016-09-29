@@ -11,6 +11,7 @@
 
     var Router = Backbone.Router.extend({
         routes: {
+            '': 'main',
             'main': 'main',
             'post': 'post',
             'comments/:id': 'comments',
@@ -236,6 +237,7 @@
             this.$el.html(comments);
 
             var commentsFromDB = this.model.get('data');
+            console.log(commentsFromDB);
             var renderedComments = Handlebars.templates.comments(commentsFromDB);
             $('#commentsContainer').html(renderedComments);
 
