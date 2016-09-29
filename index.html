@@ -9,19 +9,21 @@
 <body id="body">
     <div class="header">
 
-        <div id="logo">
+        <!--<div id="logo">
             <h1>PUPPERVIEW</h1>
 
-                <!--<img src="pug.gif" class="pug"></img>-->
+                <img src="pug.gif" class="pug"></img>
 
-        </div>
+        </div>-->
         <div id="logoutAndReturnContainer">
-
+            <a href="/logout" id="logOut">LOG OUT</a>
+            <a id="returnToMain" href="/#loggedinMain">Return to main page</a>
         </div>
         <div id="loginSlot">
         </div>
     </div>
-    <div id="stefansDiv">
+
+    <div id="loginContainer" style="display: none">
         <form id="loginForm">
             <label id="emailLabel">email</label>
             <input id='email' name= 'email' ></input>
@@ -29,16 +31,9 @@
             <input id='password' type='password' name= 'password'></input><br><br>
             <button id="loginButton" type='button' class='login'>submit</button>
             <a href="/registration.html" id="registerLink">Don't have a login? Click here to register!</a>
-            <a href="/logout" id="logOut">LOG OUT</a>
-            <a id="returnToMain" href="/#loggedinMain">Return to main page</a>
         </form>
     </div>
-
-    <div id="loginContainer" style="display: none">
-
-    </div>
     <div id="main">
-
     </div>
 
 

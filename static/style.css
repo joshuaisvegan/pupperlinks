@@ -90,7 +90,7 @@ h1 {
     float:right;
 }
 
-/*#emailLabel {
+#emailLabel {
     width: 200px;
     margin: 0px;
     color: white
@@ -98,7 +98,7 @@ h1 {
 
 #passwordLabel {
     color: white;
-}*/
+}
 
 #loginButton {
     display: inline;
