@@ -225,7 +225,6 @@
         },
         initialize: function() {
             $('#main').empty();
-
             this.render();
         },
         events: {
