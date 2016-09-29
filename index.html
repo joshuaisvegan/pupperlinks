@@ -9,12 +9,12 @@
 <body id="body">
     <div class="header">
 
-        <!--<div id="logo">
+        <div id="logo">
             <h1>PUPPERVIEW</h1>
 
                 <img src="pug.gif" class="pug"></img>
 
-        </div>-->
+        </div>
 
         <div id="loginSlot">
         </div>
@@ -57,7 +57,6 @@
 
     <div id="postButton" style="display: none">
         <button type="button" id="newLinkButton">POST A PUPPER!</button>
-        <p></p>
     </div>
 
 
@@ -76,8 +75,8 @@
     <div id="commentView" style="display: none">
         <div id="commentsContainer"></div>
       <script id="comments" type="text/handlebars">
+      <h1><a id="storyLink" href="{{[0].link}}">{{[0].content}}</a><</h1><br><br>
       {{#.}}
-      <h1><a id="storyLink" href="{{link}}">{{content}}</a><</h1><br><br>
       <div class="commentDiv">{{comment}}</div>
       <br><button type="button" id="replyButton">REPLY</button>
       {{/.}}
