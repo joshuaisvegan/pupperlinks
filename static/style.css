@@ -1,9 +1,3 @@
-#stefansDiv {
-	margin-top: 20px;
-	display:inline-block;
-    float:right;
-}
-
 @media only screen and (max-device-width: 480px) {
 		#body {
 			width: 400px;
@@ -76,7 +70,18 @@ h1 {
 	margin-right: 10px;
     display:inline-block;
     float:right;
-	font: white;
+}
+
+#logoutAndReturnText {
+	margin-top: -3px;
+}
+
+#logOut {
+	color: white;
+}
+
+#returnToMain {
+	color: white;
 }
 
 #main {
@@ -86,6 +91,7 @@ h1 {
 
 #loginForm{
 	margin-top: 5px;
+	margin-right: 10px;
     display:inline-block;
     float:right;
 }
@@ -181,4 +187,28 @@ a {
     margin-top: 20px;
 	position: absolute;
 	right: 0px;
+}
+
+#storyLink {
+	text-decoration: none;
+	color: red;
+	font-size: 22pt;
+}
+
+#storyContainer {
+	margin-bottom: 20px;
+}
+
+.mainStory {
+	color: red;
+	margin-bottom: 5px;
+	display:inline-block;
+}
+
+.mainComment {
+	margin-left: 28px;
+	padding: 1px;
+	border: solid black 2px;
+	background-color: black;
+	color: white;
 }
