@@ -225,13 +225,6 @@
         initialize: function() {
             $('#main').empty();
 
-
-            console.log(this.model.id);
-            this.model.save().then(function(res){
-                console.log('send');
-            });
-
-
             this.render();
         },
         events: {
