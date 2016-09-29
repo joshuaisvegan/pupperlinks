@@ -189,7 +189,7 @@
             this.render();
         },
         events: {
-            'click #postButton': function(event){
+            'click #postButton': function(event) {
                 this.model.set({
                     title: $("input[name|='headline']").val(),
                     link: $("input[name|='link']").val()
@@ -222,10 +222,16 @@
         },
         initialize: function() {
             $('#main').empty();
-            console.log(this.model.get('id'));
-
-
             this.render();
+        },
+        events: {
+            'click #commentButton': function(event) {
+                this.model.set({
+                    comment: $("input[name|='commentInput']").val(),
+                }).save().then(function(res) {
+                    console.log('post saved');
+                });
+            }
         }
 
     });
