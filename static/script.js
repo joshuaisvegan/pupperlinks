@@ -202,13 +202,19 @@
     });
 //    ------------------------------------------------------------------------------------
     var CommentsModel = Backbone.Model.extend({
-        url: '/comments',
+        url: function() {
+            return '/comments/'+this.id;
+        },
         initialize: function() {
             this.fetch();
         },
         save: function() {
-            return $.post(this.url, this.toJSON());
+
+            console.log(this.toJSON());
+            return $.post('/comments', this.toJSON());
+
         }
+
     });
 
     var CommentsView = Backbone.View.extend({
@@ -218,12 +224,15 @@
         },
         initialize: function() {
             $('#main').empty();
+
             console.log(this.model.id);
             this.model.save().then(function(res){
                 console.log('send');
             });
+
             this.render();
         }
+
     });
 
 
