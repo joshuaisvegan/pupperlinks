@@ -207,7 +207,6 @@
             this.fetch();
         },
         save: function() {
-            console.log(this.toJSON());
             return $.post(this.url, this.toJSON());
         }
     });
@@ -219,11 +218,10 @@
         },
         initialize: function() {
             $('#main').empty();
-            console.log(this.model.get('id'));
+            console.log(this.model.id);
             this.model.save().then(function(res){
                 console.log('send');
             });
-
             this.render();
         }
     });

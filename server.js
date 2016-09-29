@@ -214,14 +214,29 @@ app.get('/links', function (req, res) {
 })
 
 app.get('/comments', function(req, res) {
-
-    console.log(req.params);
-    res.sendStatus(200);
-
+    console.log(req.body)
+    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    // client.connect(function(err) {
+    //     if (err){
+    //         throw err;
+    //     }
+    //
+    //     var query = "SELECT * FROM comments WHERE ;";
+    //
+    //     client.query(query, function (err, results) {
+    //         if (err) {
+    //             console.log(err);
+    //         } else {
+    //             client.end();
+    //             console.log('gsfgdfg')
+    //             res.sendStatus(200);
+    //         }
+    //     });
+    // });
 });
 
 app.post('/comments', function(req, res) {
-
+    console.log(req.body)
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
     client.connect(function(err) {
         if (err){
