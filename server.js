@@ -9,6 +9,59 @@ const bcrypt = require('bcrypt');
 const url = require('url');
 
 
+//
+// // error handler
+// app.use(function (err, req, res, next) {
+//   if (err.code !== 'EBADCSRFTOKEN') return next(err)
+//
+//   // handle CSRF token errors here
+//   res.status(403)
+//   res.send('something is wrong')
+// })
+
+var transformResultsIntoLinkedList = function (results) {
+
+    var comments = results.rows;
+
+    var nodes = [];
+    var toplevelNodes = [];
+    var lookupList = {};
+
+    for (var i = 0; results.rows[i]; i++) {
+        var n = {
+            id: comments[i].id,
+            parent_id: ((comments[i].parent_id == null) ? null : comments[i].parent_id),
+            children: [],
+            user_id: comments[i].user_id,
+            comment: comments[i].comment,
+            link: comments[i].link,
+            content: comments[i].content
+        };
+        lookupList[n.id] = n;
+
+        nodes.push(n);
+
+        if (n.parent_id == null) {
+            toplevelNodes.push(n);
+        }
+    }
+
+    for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        if (!(n.parent_id == null)) {
+            lookupList[n.parent_id].children = lookupList[n.parent_id].children.concat([n]);
+        }
+    }
+    // console.log('this are nodes');
+    // console.log(nodes);
+    // console.log('this is lookupList');
+    // console.log(lookupList);
+    // console.log('this are toplevelNodes');
+    // console.log(toplevelNodes);
+
+    return toplevelNodes;
+
+}
 
 var checkStatus = function(req, res, next) {
     if (req.session.user) {
@@ -104,7 +157,6 @@ app.get('/register', function(req, res, next) {
     res.sendFile(__dirname+ '/registration.html');
 });
 
-
 app.post('/login', function (req, res) {
 
 
@@ -169,7 +221,6 @@ app.post('/post', checkStatus, function (req, res) {
         return;
     }
 
-
     var headline = req.body.title,
         link = req.body.link,
         userid = 1;
@@ -207,12 +258,6 @@ app.post('/post', checkStatus, function (req, res) {
 });
 
 app.get('/links', function (req, res) {
-
-    // if (!req.body.length) {
-    //
-    //     console.log('error');
-    //     return;
-    // }
 
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
     client.connect(function (err) {
@@ -255,40 +300,12 @@ app.get('/comments/:id', function(req, res) {
                 console.log(err);
             } else {
 
-                var comments = results.rows;
-
-                var nodes = [];
-                var toplevelNodes = [];
-                var lookupList = {};
-
-                for (var i = 0; results.rows[i]; i++) {
-                    var n = {
-                        id: comments[i].id,
-                        parent_id: ((comments[i].parent_id == null) ? null : comments[i].parent_id),
-                        children: [],
-                        user_id: comments[i].user_id,
-                        comment: comments[i].comment,
-                        link: comments[i].link,
-                        content: comments[i].content
-                    };
-                    lookupList[n.id] = n;
-                    nodes.push(n);
-                        if (n.parent_id == null) {
-                    toplevelNodes.push(n);
-                    }
-                }
-
-                for (var i = 0; i < nodes.length; i++) {
-                    var n = nodes[i];
-                    if (!(n.parent_id == null)) {
-                        lookupList[n.parent_id].children = lookupList[n.parent_id].children.concat([n]);
-                    }
-                }
+                var list = transformResultsIntoLinkedList(results);
 
                 client.end();
 
                 res.json({
-                    data: results.rows
+                    data: list
                 });
             }
         });
@@ -296,34 +313,44 @@ app.get('/comments/:id', function(req, res) {
 });
 
 app.post('/comments', checkStatus, function(req, res) {
-    console.log(req.body)
+    if (!req.body.comment) {
+        res.sendStatus(403);
+        return;
+    }
+
     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
     client.connect(function(err) {
         if (err){
             throw err;
         }
-
         if (!req.body.parent_id) {
+
             var query = "INSERT INTO comments(user_id, link_id, comment) VALUES($1, $2, $3) RETURNING id;";
             console.log('no parent')
             client.query(query, [req.session.user.id, req.body.id, req.body.comment], function (err, results) {
+
+
                 if (err) {
                     console.log(err);
                 } else {
+
+
                     var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
                     client.connect(function(err) {
                         if (err){
                             throw err;
                         }
 
-                        var query = "SELECT * FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+                        var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
 
                         client.query(query, [req.body.id], function (err, results) {
                             if (err) {
                                 console.log(err);
                             } else {
+
+                                var list = transformResultsIntoLinkedList(results);
+
                                 client.end();
-                                console.log(results.rows);
                                 res.json({
                                     data: results.rows
                                 });
@@ -333,18 +360,36 @@ app.post('/comments', checkStatus, function(req, res) {
                 }
             });
 
-
-
-
-
         } else {
+
             var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
             client.query(query, [req.body.parent_id, req.session.user.id, req.body.id, req.body.comment], function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
-                    client.end();
-                    res.sendStatus(200);
+
+                    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                    client.connect(function(err) {
+                        if (err){
+                            throw err;
+                        }
+
+                        var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+
+                        client.query(query, [req.body.id], function (err, results) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+
+                                var list = transformResultsIntoLinkedList(results);
+
+                                client.end();
+                                res.json({
+                                    data: results.rows
+                                });
+                            }
+                        });
+                    });
                 }
             });
         }
