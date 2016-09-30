@@ -3,6 +3,7 @@
     var templates = document.querySelectorAll('script[type="text/handlebars"]');
 
     Handlebars.templates = Handlebars.templates || {};
+    console.log(Handlebars.templates);
 
     Array.prototype.slice.call(templates).forEach(function(script) {
         Handlebars.templates[script.id] = Handlebars.compile(script.innerHTML);
@@ -60,7 +61,7 @@
             var logoutView = new LogoutView({
                 el: '#logOutAndReturnSlot'
             });
-        }
+        },
     });
 
 //------------------------------------------------------------------------------------
@@ -196,13 +197,18 @@
             this.render();
         },
         events: {
-            'click #postButton': function(event) {
+            'click #submitButton': function(event) {
                 this.model.set({
                     title: $("input[name|='headline']").val(),
                     link: $("input[name|='link']").val()
                 }).save().then(function(res) {
+
+                    console.log(res);
                     console.log('submitted');
                     window.location.hash = 'loggedinMain';
+                }).catch(function(err) {
+                    console.log(err);
+                    window.location = '/registration.html';
                 });
             }
         }
@@ -232,7 +238,7 @@
     });
 
     var CommentsView = Backbone.View.extend({
-        render: function(){
+        render: function() {
             var comments = $('#commentView').html();
             this.$el.html(comments);
 
@@ -258,10 +264,61 @@
                 }).save().then(function(res) {
                     console.log('post saved');
                     view.render();
+                }).catch(function(err) {
+                    console.log(err);
+                    window.location = '/registration.html';
+                });
+            },
+            'click .replyButtons': function(event) {
+                var linkId = this.model.id;
+                console.log(linkId);
+                var buttonId = (event.currentTarget.id).substr(12);
+                var replyModel = new ReplyModel({
+                    id: buttonId,
+                    linkId: linkId
+                });
+                var replyView = new ReplyView({
+                    el: '#replyFormContainer-'+buttonId,
+                    model: replyModel
                 });
             }
         }
     });
+//......................................................................................
+    var ReplyModel = Backbone.Model.extend({
+        url: function() {
+            return '/reply' + this.id;
+        },
+        save: function() {
+            console.log(this.toJSON());
+            return $.post(this.url, this.toJSON());
+        }
+
+    });
+
+    var ReplyView = Backbone.View.extend({
+        render: function() {
+            var form = this.$('form');
+            this.$el.html(form);
+        },
+        initialize: function() {
+            this.render();
+        },
+        events: {
+            'click .sendButton': function(event) {
+                console.log('hello');
+                this.model.set({
+                    reply: $("input[name|='reply']").val(),
+                    id: this.model.id,
+                    linkId: this.model.linkId
+                }).save().then(function(res) {
+                    console.log('saved');
+                    view.render();
+                });
+            }
+        }
+    });
+
 //......................................................................................
     var LogoutView = Backbone.View.extend({
         render: function() {
