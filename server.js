@@ -352,7 +352,7 @@ app.post('/comments', checkStatus, function(req, res) {
 
                                 client.end();
                                 res.json({
-                                    data: results.rows
+                                    data: list
                                 });
                             }
                         });
@@ -385,7 +385,7 @@ app.post('/comments', checkStatus, function(req, res) {
 
                                 client.end();
                                 res.json({
-                                    data: results.rows
+                                    data: list
                                 });
                             }
                         });
