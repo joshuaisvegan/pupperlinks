@@ -307,10 +307,11 @@
         events: {
             'click .sendButton': function(event) {
                 console.log('hello');
+                console.log(this.model);
                 this.model.set({
                     reply: $("input[name|='reply']").val(),
                     id: this.model.id,
-                    linkId: this.model.linkId
+                    linkId: this.model.get('linkId')
                 }).save().then(function(res) {
                     console.log('saved');
                     view.render();
