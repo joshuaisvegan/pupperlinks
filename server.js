@@ -4,9 +4,14 @@ const pg = require('pg');
 const cookieSession = require('cookie-session');
 const csrf = require('csurf');
 const hb = require('express-handlebars');
-const credentials = require('./credentials');
 const bcrypt = require('bcrypt');
 const url = require('url');
+
+var databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl){
+    databaseUrl = 'postgres://' + require('./credentials').pgUser + ':' + require('./credentials').pgPassword + '@localhost:5432/users';
+}
 
 
 //
@@ -114,7 +119,7 @@ app.post('/register', function(req, res){
 
     var name = req.body.name;
     var email = req.body.email;
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    var client = new pg.Client(databaseUrl);
     client.connect(function (err) {
         if (err){
             throw err;
@@ -159,7 +164,7 @@ app.post('/login', function (req, res) {
         console.log('error');
     }
 
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    var client = new pg.Client(databaseUrl);
     client.connect(function (err) {
         if (err){
             throw (err);
@@ -228,7 +233,7 @@ app.post('/post', checkStatus, function (req, res) {
         return;
     } else {
 
-        var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+        var client = new pg.Client(databaseUrl);
         client.connect(function (err) {
             if (err){
                 throw err;
@@ -253,7 +258,7 @@ app.post('/post', checkStatus, function (req, res) {
 
 app.get('/links', function (req, res) {
 
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    var client = new pg.Client(databaseUrl);
     client.connect(function (err) {
         if (err){
             throw err;
@@ -281,7 +286,7 @@ app.get('/links', function (req, res) {
 app.get('/comments/:id', function(req, res) {
 
 
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    var client = new pg.Client(databaseUrl);
     client.connect(function(err) {
         if (err){
             throw err;
@@ -313,7 +318,7 @@ app.post('/reply/:id', function(req, res) {
 
     var parent_id = req.body.id;
 
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    var client = new pg.Client(databaseUrl);
     client.connect(function(err) {
         if (err){
             throw err;
@@ -325,7 +330,7 @@ app.post('/reply/:id', function(req, res) {
                 console.log(err);
             } else {
 
-                var client1 = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                var client1 = new pg.Client(databaseUrl);
                 client1.connect(function(err) {
                     if (err){
                         throw err;
@@ -359,7 +364,7 @@ app.post('/comments', function(req, res) {
         return;
     }
 
-    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    var client = new pg.Client(databaseUrl);
     client.connect(function(err) {
         if (err){
             throw err;
@@ -376,7 +381,7 @@ app.post('/comments', function(req, res) {
                 } else {
 
 
-                    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                    var client = new pg.Client(databaseUrl);
                     client.connect(function(err) {
                         if (err){
                             throw err;
@@ -409,7 +414,7 @@ app.post('/comments', function(req, res) {
                     console.log(err);
                 } else {
 
-                    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                    var client = new pg.Client(databaseUrl);
                     client.connect(function(err) {
                         if (err){
                             throw err;
