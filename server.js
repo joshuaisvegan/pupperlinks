@@ -308,8 +308,8 @@ app.get('/comments/:id', function(req, res) {
 
 
 app.post('/reply/:id', function(req, res) {
-    console.log(req.body);
-    console.log(req.params)
+    console.log(req.body.id);
+
 
     var parent_id = req.body.id;
 
@@ -324,21 +324,22 @@ app.post('/reply/:id', function(req, res) {
             if (err) {
                 console.log(err);
             } else {
-                console.log('hhhhhh')
-                var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
-                client.connect(function(err) {
+
+                var client1 = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                client1.connect(function(err) {
                     if (err){
                         throw err;
                     }
 
-                    var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+                    var query1 = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
 
-                    client.query(query, [req.body.id], function (err, results) {
+                    client1.query(query1, [req.body.linkId], function (err, results) {
                         if (err) {
                             console.log(err);
                         } else {
-
+                            
                             var list = transformResultsIntoLinkedList(results);
+                            console.log(list);
 
                             client.end();
                             res.json({
