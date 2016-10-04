@@ -1,35 +1,9 @@
-@media only screen and (max-device-width: 480px) {
-		#body {
-			width: 400px;
-		}
-
-		div#header {
-			background-image: url(media-queries-phone.jpg);
-			height: 93px;
-			position: relative;
-		}
-
-		div#header h1 {
-			font-size: 140%;
-		}
-
-		#content {
-			float: none;
-			width: 100%;
-		}
-
-		#navigation {
-			float:none;
-			width: auto;
-		}
-	}
 
 #body {
     margin: 0px;
 }
 
 .header {
-	min-width: 960px;
     background: black;
     height: 63px;
 	overflow: hidden;
@@ -37,18 +11,33 @@
 }
 
 #logo {
-    position: absolute;
-	height:70px;
-    width: 50%;
-    margin-top: 8px;
+	display: inline;
+	float:left;
+    margin-top: 6px;
     margin-bottom: 8px;
     margin-left: 4px;
 }
 
+#loginSlot {
+	display: inline;
+	position:relative;
+	float: left;
+}
+
+#loginForm{
+	border: solid black 1px;
+	margin-left: 10px;
+	margin-top: 5px;
+	margin-right: 10px;
+	padding: 5px;
+    display:inline-block;
+    float:right;
+}
+
 .pugDiv {
     display: inline;
-    width: 70px;
-    height: 70px;
+    width: auto;
+    height: auto;
 }
 
 .pug {
@@ -62,14 +51,17 @@ h1 {
     margin: 0px;
     color: white;
     font-family: arial;
-    font-size: 60px;
+    font-size: 218%;
 }
 
 #logoutAndReturnContainer {
-	margin-top: 40px;
-	margin-right: 10px;
+	z-index: 100;
+	margin-left: 5px;
+	margin-top:5px;
+	color: red;
     display:inline-block;
-    float:right;
+	position:absolute;
+    float:left;
 }
 
 #logoutAndReturnText {
@@ -77,11 +69,11 @@ h1 {
 }
 
 #logOut {
-	color: white;
+	color: grey;
 }
 
 #returnToMain {
-	color: white;
+	color: grey;
 }
 
 #main {
@@ -89,21 +81,16 @@ h1 {
 	margin-left: 20px;
 }
 
-#loginForm{
-	margin-top: 5px;
-	margin-right: 10px;
-    display:inline-block;
-    float:right;
-}
+
 
 #emailLabel {
     width: 200px;
     margin: 0px;
-    color: white
+    color: black
 }
 
 #passwordLabel {
-    color: white;
+    color: black;
 }
 
 #loginButton {
@@ -112,7 +99,7 @@ h1 {
 
 #registerLink {
     float:right;
-    color: white;
+    color: black;
 }
 
 a {
@@ -207,8 +194,12 @@ a {
 
 .mainComment {
 	margin-left: 28px;
-	padding: 1px;
+	padding: px;
 	border: solid black 2px;
 	background-color: black;
 	color: white;
+}
+
+.commentDiv {
+	margin-top: 20px;
 }

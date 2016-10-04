@@ -8,7 +8,9 @@
 
 <body id="body">
     <div class="header">
-
+        <div id="logoutAndReturnContainer" style:"display: none">
+            <p id="logoutAndReturnText"><a id="returnToMain" href="/#loggedinMain">Return to main page</a> | <a href="/logout" id="logOut">LOG OUT</a></p>
+        </div>
         <div id="logo">
             <h1>PUPPERVIEW</h1>
 
@@ -16,23 +18,23 @@
 
         </div>
 
-        <div id="loginSlot">
-        </div>
-        <div id="logOutAndReturnSlot">
-        </div>
+
     </div>
 
-    <div id="logoutAndReturnContainer" style:"display: none">
-        <p id="logoutAndReturnText"><a id="returnToMain" href="/#loggedinMain">Return to main page</a>   <a href="/logout" id="logOut">LOG OUT</a></p>
+    <div id="loginSlot">
     </div>
+    <div id="logOutAndReturnSlot">
+    </div><br><br><br><br>
+
+
 
     <div id="loginContainer" style="display: none">
         <form id="loginForm">
-            <label id="emailLabel">email</label>
             <input id='email' name= 'email' ></input>
+            <label id="emailLabel">email</label><br>
+            <input id='password' type='password' name= 'password'></input>
             <label id="passwordLabel">password</label>
-            <input id='password' type='password' name= 'password'></input><br><br>
-            <button id="loginButton" type='button' class='login'>submit</button>
+            <button id="loginButton" type='button' class='login'>submit</button><br>
             <a href="/registration.html" id="registerLink">Don't have a login? Click here to register!</a>
         </form>
     </div>

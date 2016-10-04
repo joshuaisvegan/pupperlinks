@@ -27,7 +27,7 @@ var transformResultsIntoLinkedList = function (results) {
     var toplevelNodes = [];
     var lookupList = {};
 
-    for (var i = 0; results.rows[i]; i++) {
+    for (var i = 0; comments[i]; i++) {
         var n = {
             id: comments[i].id,
             parent_id: ((comments[i].parent_id == null) ? null : comments[i].parent_id),
@@ -52,12 +52,7 @@ var transformResultsIntoLinkedList = function (results) {
             lookupList[n.parent_id].children = lookupList[n.parent_id].children.concat([n]);
         }
     }
-    // console.log('this are nodes');
-    // console.log(nodes);
-    // console.log('this is lookupList');
-    // console.log(lookupList);
-    // console.log('this are toplevelNodes');
-    // console.log(toplevelNodes);
+
 
     return toplevelNodes;
 
@@ -312,7 +307,52 @@ app.get('/comments/:id', function(req, res) {
     });
 });
 
-app.post('/comments', checkStatus, function(req, res) {
+
+app.post('/reply', function(req, res) {
+    console.log(req.body)
+
+    var parent_id = req.body.id;
+
+    var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+    client.connect(function(err) {
+        if (err){
+            throw err;
+        }
+
+        var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
+        client.query(query, [parent_id, req.session.user.id, req.body.linkId, req.body.reply], function (err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+
+                var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
+                client.connect(function(err) {
+                    if (err){
+                        throw err;
+                    }
+
+                    var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+
+                    client.query(query, [req.body.id], function (err, results) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+
+                            var list = transformResultsIntoLinkedList(results);
+
+                            client.end();
+                            res.json({
+                                data: list
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    });
+})
+app.post('/comments', function(req, res) {
+    console.log(req.body)
     if (!req.body.comment) {
         res.sendStatus(403);
         return;
