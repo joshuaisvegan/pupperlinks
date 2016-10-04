@@ -53,7 +53,6 @@ var transformResultsIntoLinkedList = function (results) {
         }
     }
 
-
     return toplevelNodes;
 
 }
@@ -308,8 +307,9 @@ app.get('/comments/:id', function(req, res) {
 });
 
 
-app.post('/reply', function(req, res) {
-    console.log(req.body)
+app.post('/reply/:id', function(req, res) {
+    console.log(req.body);
+    console.log(req.params)
 
     var parent_id = req.body.id;
 
@@ -324,7 +324,7 @@ app.post('/reply', function(req, res) {
             if (err) {
                 console.log(err);
             } else {
-
+                console.log('hhhhhh')
                 var client = new pg.Client('postgres://' + credentials.pgUser + ':' + credentials.pgPassword + '@localhost:5432/users');
                 client.connect(function(err) {
                     if (err){
