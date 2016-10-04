@@ -8,16 +8,24 @@ const credentials = require('./credentials');
 const bcrypt = require('bcrypt');
 const url = require('url');
 
+app.use(csrf());
 
-//
-// // error handler
-// app.use(function (err, req, res, next) {
-//   if (err.code !== 'EBADCSRFTOKEN') return next(err)
-//
-//   // handle CSRF token errors here
-//   res.status(403)
-//   res.send('something is wrong')
-// })
+
+app.use(function(req, res, next) {
+    req.method == 'GET' && res.setHeader('csrf-Token', req.csrf());
+    next();
+
+})
+
+// error handler
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err)
+
+  // handle CSRF token errors here
+  res.status(403)
+  res.send('something is wrong')
+})
+
 
 var transformResultsIntoLinkedList = function (results) {
 
@@ -337,7 +345,7 @@ app.post('/reply/:id', function(req, res) {
                         if (err) {
                             console.log(err);
                         } else {
-                            
+
                             var list = transformResultsIntoLinkedList(results);
                             console.log(list);
 
