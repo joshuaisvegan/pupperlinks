@@ -286,9 +286,7 @@
     });
 //......................................................................................
     var ReplyModel = Backbone.Model.extend({
-        url: function() {
-            return '/reply' + this.id;
-        },
+        url: '/reply',
         save: function() {
             console.log(this.toJSON());
             return $.post(this.url, this.toJSON());
@@ -308,6 +306,7 @@
             'click .sendButton': function(event) {
                 console.log('hello');
                 console.log(this.model);
+                var view = this;
                 this.model.set({
                     reply: $("input[name|='reply']").val(),
                     id: this.model.id,
