@@ -8,14 +8,14 @@ const credentials = require('./credentials');
 const bcrypt = require('bcrypt');
 const url = require('url');
 
-app.use(csrf());
-
-
-app.use(function(req, res, next) {
-    req.method == 'GET' && res.setHeader('csrf-Token', req.csrf());
-    next();
-
-})
+// app.use(csrf());
+//
+//
+// app.use(function(req, res, next) {
+//     req.method == 'GET' && res.setHeader('csrf-Token', req.csrf());
+//     next();
+//
+// })
 
 // error handler
 app.use(function (err, req, res, next) {
