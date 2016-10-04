@@ -309,7 +309,7 @@
                 console.log('hello');
                 var view = this;
                 this.model.set({
-                    reply: $("input[name|='reply']").val(),
+                    reply: this.$("input[name|='reply']").val(),
                     id: this.model.id,
                     linkId: this.model.get('linkId')
                 }).save().then(function(res) {
