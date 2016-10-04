@@ -9,6 +9,8 @@
         Handlebars.templates[script.id] = Handlebars.compile(script.innerHTML);
     });
 
+    Handlebars.registerPartial("item", $("#commentPartial").html());
+
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -273,6 +275,7 @@
                 var linkId = this.model.id;
                 console.log(linkId);
                 var buttonId = (event.currentTarget.id).substr(12);
+                var view = this;
                 var replyModel = new ReplyModel({
                     id: buttonId,
                     linkId: linkId
@@ -280,6 +283,9 @@
                 var replyView = new ReplyView({
                     el: '#replyFormContainer-'+buttonId,
                     model: replyModel
+                }).on('replyComplete', function() {
+                    view.render();
+                    console.log('render');
                 });
             }
         }
@@ -314,7 +320,7 @@
                     linkId: this.model.get('linkId')
                 }).save().then(function(res) {
                     console.log('saved');
-                    view.render();
+                    view.trigger('replyComplete');
                 });
             }
         }
