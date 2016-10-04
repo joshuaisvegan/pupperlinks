@@ -337,7 +337,7 @@ app.post('/reply/:id', function(req, res) {
                         if (err) {
                             console.log(err);
                         } else {
-                            
+
                             var list = transformResultsIntoLinkedList(results);
                             console.log(list);
 
@@ -437,4 +437,4 @@ app.post('/comments', function(req, res) {
     });
 });
 
-app.listen(8081);
+app.listen(process.env.PORT || 8081);
