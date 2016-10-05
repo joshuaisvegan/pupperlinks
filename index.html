@@ -136,15 +136,24 @@
     <div id="invalidUrlSlot">
     </div>
     <div id="invalidUrlMessage" style="display: none">
-        LINK HAS TO START WITH HTTP OR HTTPS
+        <div>URL HAS TO START WITH HTTP OR HTTPS</div>
+        <div>HEADLINES CAN NOT BE LONGER THAN 255 CHARACTERS</div>
     </div>
 
-    <div id="notLoggedInSlot">
+    <div id="registrationFormContainer" style="display: none">
+        <div id="regForm">
+            <h3>Sign up here to get in on the action</h3>
+            <form action="/register" method="post">
+                <p class="regisLabels">name<br>
+                <input id='name' name= 'name'></input><br>
+                <p class="regisLabels">email<br>
+                <input id='email' name= 'email'></input><br>
+                <p class="regisLabels">password<br>
+                <input id='password' type='password' name= 'password'></input><br><br>
+                <button type='submit' class='submit'>submit</button>
+            </form>
+        </div>
     </div>
-    <div id="notLoggedInMessage" style="display: none">
-        YOU HAVE TO BE LOGGED IN TO POST A COMMENT
-    </div>
-
 
 
 
