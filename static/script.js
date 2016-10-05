@@ -22,6 +22,7 @@
             'register': 'register'
         },
         main: function(){
+            $('#main').off();
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
             }   else {
@@ -38,6 +39,7 @@
             }
         },
         post: function(){
+            $('#main').off();
             if (isLoggedIn) {
                 var postModel = new PostModel();
                 var postView = new PostView({
@@ -52,6 +54,8 @@
             }
         },
         comments: function(id) {
+            $('#main').off();
+
             var router = this;
             var commentsModel = new CommentsModel({
                 id: id
@@ -67,6 +71,8 @@
             });
         },
         loggedinMain: function() {
+            $('#main').off();
+
             if (isLoggedIn) {
                 var loggedinMainModel = new LoggedinMainModel();
                 var loggedinMainView = new LoggedinMainView({
@@ -84,6 +90,8 @@
             }
         },
         register: function () {
+            $('#main').off();
+
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
             }  else {
@@ -398,7 +406,7 @@
                     linkId: this.model.get('linkId')
                 }).save().then(function(res) {
                     console.log('saved');
-                    view.trigger('replyComplete');
+                    view.undelegateEvents().trigger('replyComplete');
                 });
             }
         }
