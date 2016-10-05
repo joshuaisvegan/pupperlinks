@@ -129,6 +129,7 @@
             this.$el.html(mainPage);
 
             var linksFromDB = this.model.get('data');
+            console.log(linksFromDB);
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
 
@@ -213,7 +214,9 @@
                 }).catch(function(xhr) {
                     console.log(xhr.status);
                     if (xhr.status === 403) {
-                        window.location = '/registration.html';
+                        var urlErrorView = new UrlErrorView({
+                            el: '#invalidUrlSlot'
+                        });
                     }
                 });
             }
@@ -256,6 +259,7 @@
         },
         initialize: function() {
             $('#main').empty();
+            $('#invalidUrlSlot').empty();
             this.render();
             var view = this;
             this.model.on('change', function () {
@@ -344,7 +348,7 @@
     });
 
     //......................................................................................
-    var urlErrorView = Backbone.View.extend({
+    var UrlErrorView = Backbone.View.extend({
         render: function() {
             var invalidUrlMessage = $('#invalidUrlMessage').html();
             this.$el.html(invalidUrlMessage);
