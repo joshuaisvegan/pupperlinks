@@ -306,6 +306,9 @@ app.get('/links', function (req, res) {
             } else {
                 client.end();
 
+                for (var row in results.rows) {
+                    results.rows[row].timestamp = Date(results.rows[row].timestamp);
+                }
                 res.json({
 
                     data: results.rows
