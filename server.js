@@ -46,6 +46,7 @@ var transformResultsIntoLinkedList = function (results) {
             children: [],
             user_id: comments[i].user_id,
             comment: comments[i].comment,
+            timestamp: comments[i].timestamp,
             link: comments[i].link,
             content: comments[i].content
         };
@@ -150,7 +151,8 @@ app.post('/register', function(req, res){
                     req.session.user = {
 
                         id: results.rows[0].id,
-                        email: email
+                        email: email,
+                        name: name
                     }
                     res.redirect('/#loggedinMain');
                 }
@@ -200,6 +202,7 @@ app.post('/login', function (req, res) {
                             id: id,
                             email: email
 
+
                         }
                         res.sendStatus(200);
                     } else {
@@ -220,16 +223,25 @@ app.get('/logout', function (req, res) {
 })
 
 app.post('/post', checkStatus, function (req, res) {
-
+    //console.log(req.body.title)
+    //console.log(req.session.user.id)
 
     if (url.parse(req.body.link).host == null) {
         res.sendStatus(403);
         return;
     }
 
+    console.log(req.body.title.length)
+
+    if (req.body.title.length >= 255) {
+        res.sendStatus(405);
+        return;
+    }
+
+
     var headline = req.body.title,
         link = req.body.link,
-        userid = 1;
+        userid = req.session.user.id;
 
 
     if (!req.session.user) {
@@ -291,20 +303,44 @@ app.get('/links', function (req, res) {
 })
 
 app.get('/comments/:id', function(req, res) {
-
-
+    console.log(req.body)
     var client = new pg.Client(databaseUrl);
     client.connect(function(err) {
         if (err){
             throw err;
         }
 
-        var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+        var query = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, comments.timestamp, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
 
         client.query(query, [req.params.id], function (err, results) {
             if (err) {
                 console.log(err);
             } else {
+
+                if (results.rows.length == 0) {
+
+                    var clientN = new pg.Client(databaseUrl);
+                    clientN.connect(function(err) {
+                        if (err){
+                            throw err;
+                        }
+
+                        var queryN = "SELECT * FROM links WHERE links.id = $1;"
+
+                        clientN.query(queryN, [req.params.id], function (err, results) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+
+                                res.json({
+                                    data: results.rows
+                                });
+                            }
+                        });
+                    });
+                    return;
+                }
+
 
                 var list = transformResultsIntoLinkedList(results);
 
@@ -343,7 +379,7 @@ app.post('/reply/:id', function(req, res) {
                         throw err;
                     }
 
-                    var query1 = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
+                    var query1 = "SELECT comments.id, comments.parent_id, comments.user_id, comments.comment, comments.timestamp, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id WHERE comments.link_id = $1;";
 
                     client1.query(query1, [req.body.linkId], function (err, results) {
                         if (err) {
