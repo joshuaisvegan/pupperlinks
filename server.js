@@ -41,6 +41,7 @@ var transformResultsIntoLinkedList = function (results) {
 
     for (var i = 0; comments[i]; i++) {
         var n = {
+            name: comments[i].name,
             id: comments[i].id,
             parent_id: ((comments[i].parent_id == null) ? null : comments[i].parent_id),
             children: [],
@@ -329,7 +330,7 @@ app.get('/comments/:id', function(req, res) {
             if (err) {
                 console.log(err);
             } else {
-
+                console.log(results)
                 if (results.rows.length == 0) {
 
                     var clientN = new pg.Client(databaseUrl);
