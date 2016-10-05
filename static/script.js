@@ -3,7 +3,6 @@
     var templates = document.querySelectorAll('script[type="text/handlebars"]');
 
     Handlebars.templates = Handlebars.templates || {};
-    console.log(Handlebars.templates);
 
     Array.prototype.slice.call(templates).forEach(function(script) {
         Handlebars.templates[script.id] = Handlebars.compile(script.innerHTML);
@@ -43,12 +42,15 @@
             });
         },
         comments: function(id) {
+            var router = this;
             var commentsModel = new CommentsModel({
                 id: id
             });
             var commentsView = new CommentsView({
                 el: '#main',
                 model: commentsModel
+            }).on('refresh', function() {
+                router.comments(id);
             });
         },
         loggedinMain: function() {
@@ -208,9 +210,11 @@
                     console.log(res);
                     console.log('submitted');
                     window.location.hash = 'loggedinMain';
-                }).catch(function(err) {
-                    console.log(err);
-                    window.location = '/registration.html';
+                }).catch(function(xhr) {
+                    console.log(xhr.status);
+                    if (xhr.status === 403) {
+                        window.location = '/registration.html';
+                    }
                 });
             }
         }
@@ -266,8 +270,8 @@
                 }).save().then(function(res) {
                     console.log('post saved');
                     view.render();
-                }).catch(function(err) {
-                    console.log(err);
+                }).catch(function(xhr) {
+                    console.log(xhr.status);
                     window.location = '/registration.html';
                 });
             },
@@ -284,7 +288,8 @@
                     el: '#replyFormContainer-'+buttonId,
                     model: replyModel
                 }).on('replyComplete', function() {
-                    view.render();
+
+                    view.undelegateEvents().trigger('refresh');
                     console.log('render');
                 });
             }
@@ -330,7 +335,6 @@
     var LogoutView = Backbone.View.extend({
         render: function() {
             var logout = $('#logoutAndReturnContainer').html();
-            console.log(logout);
             this.$el.html(logout);
 
         },
@@ -338,6 +342,20 @@
             this.render();
         }
     });
+
+    //......................................................................................
+    var urlErrorView = Backbone.View.extend({
+        render: function() {
+            var invalidUrlMessage = $('#invalidUrlMessage').html();
+            this.$el.html(invalidUrlMessage);
+
+        },
+        initialize: function() {
+            this.render();
+        }
+    });
+
+    //......................................................................................
 
     var router = new Router();
     Backbone.history.start();
