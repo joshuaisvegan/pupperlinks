@@ -77,10 +77,27 @@
         <div id="commentsContainer"></div>
         <script id="comments" type="text/handlebars">
             <h1><a id="storyLink" href="{{[0].link}}">{{[0].content}}</a></h1><br><br>
+
             <ul>
                 {{#.}}
                     {{#if comment}}
-                        {{> item}}
+                        <div>
+                            <div class="commentDiv">
+                                <div class="commentText">{{comment}}</div>
+                                <div class="commentTimestamp">posted at {{timestamp}}</div>
+                            </div>
+                            <button type="button" class ="replyButtons" id="replyButton-{{id}}">REPLY</button>
+                            <div id="replyFormContainer-{{id}}">
+
+                                <div class="replyForm" style="display: none">
+                                  <form>
+                                      <label for="input">COMMENT</label>
+                                      <input type="text" name="reply"><br><br>
+                                      <button type="button" class="sendButton" id="sendButton-{{id}}">SEND</button>
+                                  </form>
+                                </div>
+                            </div>
+                        </div>
                         <ul>
                             {{#each children}}
                                 {{> item}}
@@ -92,6 +109,21 @@
         </script>
 
         <script id="commentPartial" type="text/handlebars">
+
+            <div>
+                <div class="commentDiv">
+                    <div class="commentText">{{comment}}</div>
+                    <div class="commentTimestamp">posted at {{timestamp}}</div>
+                </div>
+                <button type="button" class ="replyButtons" id="replyButton-{{id}}">REPLY</button>
+                <div id="replyFormContainer-{{id}}">
+
+                    <div class="replyForm" style="display: none">
+                      <form>
+                          <label for="input">COMMENT</label>
+                          <input type="text" name="reply"><br><br>
+                          <button type="button" class="sendButton" id="sendButton-{{id}}">SEND</button>
+                      </form>
             <li>
                 <div>
                     <div class="commentDiv">
@@ -110,12 +142,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <li>
                 <ul>
                     {{#each children}}
                         {{> item}}
                     {{/each}}
                 </ul>
             </li>
+
         </script>
         <div id="commentForm">
             <form>
