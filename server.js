@@ -118,6 +118,16 @@ app.use(cookieSession({
 
 app.use(express.static(__dirname + '/static'));
 
+
+app.get('/init', function(req, res, next) {
+
+    res.json({
+        username: req.session.user.id
+    });
+
+});
+
+
 app.get('/', function(req, res, next) {
 
     res.sendFile(__dirname+ '/index.html');
@@ -234,7 +244,7 @@ app.post('/post', checkStatus, function (req, res) {
         return;
     }
 
-    console.log(req.body.title.length)
+
 
     if (req.body.title.length >= 255) {
         res.sendStatus(405);
@@ -332,10 +342,9 @@ app.get('/comments/:id', function(req, res) {
                             if (err) {
                                 console.log(err);
                             } else {
-                                console.log(req.session.user)
+
                                 res.json({
-                                    data: results.rows,
-                                    session: req.session.user
+                                    data: results.rows
                                 });
                             }
                         });
@@ -348,8 +357,7 @@ app.get('/comments/:id', function(req, res) {
                 client.end();
 
                 res.json({
-                    data: list,
-                    session: req.session.user
+                    data: list
                 });
             }
         });
@@ -390,8 +398,7 @@ app.post('/reply/:id', function(req, res) {
 
                             client.end();
                             res.json({
-                                data: list,
-                                session: req.session.user
+                                data: list
                             });
                         }
                     });
@@ -440,8 +447,7 @@ app.post('/comments', function(req, res) {
 
                                 client.end();
                                 res.json({
-                                    data: list,
-                                    session: req.session.user
+                                    data: list
                                 });
                             }
                         });
@@ -474,8 +480,7 @@ app.post('/comments', function(req, res) {
 
                                 client.end();
                                 res.json({
-                                    data: list,
-                                    session: req.session.user
+                                    data: list
                                 });
                             }
                         });
