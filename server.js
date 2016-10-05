@@ -247,8 +247,6 @@ app.post('/post', checkStatus, function (req, res) {
         return;
     }
 
-
-
     if (req.body.title.length >= 255) {
         res.sendStatus(405);
         return;
@@ -420,88 +418,89 @@ app.post('/comments', function(req, res) {
 
     if (!req.session.user) {
         res.redirect('/comments/:id');
-    }
+    } else if (!req.body.comment){
 
-    if (!req.body.comment) {
         res.sendStatus(403);
         return;
+
+    } else {
+
+        var client = new pg.Client(databaseUrl);
+        client.connect(function(err) {
+            if (err){
+                throw err;
+            }
+            if (!req.body.parent_id) {
+
+                var query = "INSERT INTO comments(user_id, link_id, comment) VALUES($1, $2, $3) RETURNING id;";
+                console.log('no parent')
+                client.query(query, [req.session.user.id, req.body.id, req.body.comment], function (err, results) {
+
+
+                    if (err) {
+                        console.log(err);
+                    } else {
+
+                        var client = new pg.Client(databaseUrl);
+                        client.connect(function(err) {
+                            if (err){
+                                throw err;
+                            }
+
+                            var query = "SELECT userslinks.name, comments.id, comments.parent_id, comments.user_id, comments.comment, comments.timestamp, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id JOIN userslinks ON userslinks.id = comments.user_id WHERE comments.link_id = $1 ORDER BY comments.timestamp DESC;";
+
+                            client.query(query, [req.body.id], function (err, results) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+
+                                    var list = transformResultsIntoLinkedList(results);
+
+                                    client.end();
+                                    res.json({
+                                        data: list
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+
+            } else {
+
+                var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
+                client.query(query, [req.body.parent_id, req.session.user.id, req.body.id, req.body.comment], function (err, results) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+
+                        var client = new pg.Client(databaseUrl);
+                        client.connect(function(err) {
+                            if (err){
+                                throw err;
+                            }
+
+                            var query = "SELECT userslinks.name, comments.id, comments.parent_id, comments.user_id, comments.comment, comments.timestamp, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id JOIN userslinks ON userslinks.id = comments.user_id WHERE comments.link_id = $1 ORDER BY comments.timestamp DESC;";
+
+                            client.query(query, [req.body.id], function (err, results) {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+
+                                    var list = transformResultsIntoLinkedList(results);
+
+                                    client.end();
+                                    res.json({
+                                        data: list
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+        });
     }
-
-    var client = new pg.Client(databaseUrl);
-    client.connect(function(err) {
-        if (err){
-            throw err;
-        }
-        if (!req.body.parent_id) {
-
-            var query = "INSERT INTO comments(user_id, link_id, comment) VALUES($1, $2, $3) RETURNING id;";
-            console.log('no parent')
-            client.query(query, [req.session.user.id, req.body.id, req.body.comment], function (err, results) {
-
-
-                if (err) {
-                    console.log(err);
-                } else {
-
-                    var client = new pg.Client(databaseUrl);
-                    client.connect(function(err) {
-                        if (err){
-                            throw err;
-                        }
-
-                        var query = "SELECT userslinks.name, comments.id, comments.parent_id, comments.user_id, comments.comment, comments.timestamp, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id JOIN userslinks ON userslinks.id = comments.user_id WHERE comments.link_id = $1 ORDER BY comments.timestamp DESC;";
-
-                        client.query(query, [req.body.id], function (err, results) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-
-                                var list = transformResultsIntoLinkedList(results);
-
-                                client.end();
-                                res.json({
-                                    data: list
-                                });
-                            }
-                        });
-                    });
-                }
-            });
-
-        } else {
-
-            var query = "INSERT INTO comments(parent_id, user_id, link_id, comment) VALUES($1, $2, $3, $4) RETURNING id;";
-            client.query(query, [req.body.parent_id, req.session.user.id, req.body.id, req.body.comment], function (err, results) {
-                if (err) {
-                    console.log(err);
-                } else {
-
-                    var client = new pg.Client(databaseUrl);
-                    client.connect(function(err) {
-                        if (err){
-                            throw err;
-                        }
-
-                        var query = "SELECT userslinks.name, comments.id, comments.parent_id, comments.user_id, comments.comment, comments.timestamp, links.link, links.content FROM comments JOIN links ON links.id = comments.link_id JOIN userslinks ON userslinks.id = comments.user_id WHERE comments.link_id = $1 ORDER BY comments.timestamp DESC;";
-
-                        client.query(query, [req.body.id], function (err, results) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-
-                                var list = transformResultsIntoLinkedList(results);
-
-                                client.end();
-                                res.json({
-                                    data: list
-                                });
-                            }
-                        });
-                    });
-                }
-            });
-        }
-    });
 });
 
 app.listen(process.env.PORT || 8081);
