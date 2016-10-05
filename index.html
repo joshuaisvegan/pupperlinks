@@ -61,15 +61,12 @@
         </div>
     </div>
 
-
-
-
     <div id="postForm" style="display: none">
         <form id="userPost">
             <div class="form">
-                <label for="input">HEADLINE</label><br>
+                <label id="postHeadline" for="input">HEADLINE</label><br>
                 <input type="text" name="headline"><br><br>
-                <label for="input">URL</label><br>
+                <label id="postURL" for="input">URL</label><br>
                 <input type="text" name="link">
             </div>
             <button type="button" id="submitButton">SUBMIT</button>
@@ -92,8 +89,6 @@
                     {{/if}}
                 {{/.}}
             </ul>
-
-
         </script>
 
         <script id="commentPartial" type="text/handlebars">
@@ -124,7 +119,7 @@
         </script>
         <div id="commentForm">
             <form>
-                <br><br><label for="input">COMMENT</label>
+                <br><br><label id="commentInputLabel" for="input">COMMENT</label>
                 <input name="commentInput" type="text">
         </div>
             <button type="button" id="commentButton">SUBMIT</button>
@@ -152,10 +147,6 @@
             </form>
         </div>
     </div>
-
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>

@@ -30,7 +30,7 @@
 	margin-top: 12px;
 	margin-right: 10px;
 	margin-bottom: 2px;
-	padding: 5px;
+	padding: 10px;
     display:inline-block;
     float:right;
 }
@@ -56,7 +56,7 @@ h1 {
 }
 
 #introText {
-	margin-top: 10px;
+	margin-top: 25px;
 	font-family: arial;
     margin-bottom: 10px;
 	margin-left: 10px;
@@ -166,6 +166,16 @@ h3 {
 	color: grey;
 }
 
+#postHeadline {
+    font-family: arial;
+    color: grey;
+}
+
+#postURL {
+    font-family: arial;
+    color: grey;
+}
+
 #linkContainer {
 	margin-top: 50px;
 }
@@ -220,5 +230,10 @@ li {
 .commentTimestamp {
     font-family: arial;
     font-size: 10pt;
+    color: grey;
+}
+
+#commentInputLabel {
+    font-family: arial;
     color: grey;
 }
