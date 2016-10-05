@@ -122,12 +122,11 @@ app.use(express.static(__dirname + '/static'));
 app.get('/init', function(req, res, next) {
     if (!req.session.user) {
         res.sendStatus(405);
+    } else {
+        res.json({
+            username: req.session.user.id
+        });
     }
-
-    res.json({
-        username: req.session.user.id
-    });
-
 });
 
 
