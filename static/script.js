@@ -10,6 +10,7 @@
 
     Handlebars.registerPartial("item", $("#commentPartial").html());
 
+    var isLoggedIn;
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -20,26 +21,34 @@
             'loggedinMain': 'loggedinMain'
         },
         main: function(){
-            var mainModel = new MainModel();
-            var mainView = new MainView({
-                el: '#main',
-                model: mainModel
-            });
-            var loginModel = new LoginModel();
-            var loginView = new LoginView({
-                el: '#loginSlot',
-                model: loginModel
-            });
+            if (isLoggedIn) {
+                window.location.hash = 'loggedinMain';
+            }   else {
+                var mainModel = new MainModel();
+                var mainView = new MainView({
+                    el: '#main',
+                    model: mainModel
+                });
+                var loginModel = new LoginModel();
+                var loginView = new LoginView({
+                    el: '#loginSlot',
+                    model: loginModel
+                });
+            }
         },
         post: function(){
-            var postModel = new PostModel();
-            var postView = new PostView({
-                el: '#main',
-                model: postModel
-            });
-            var logoutView = new LogoutView({
-                el: '#logOutAndReturnSlot'
-            });
+            if (isLoggedIn) {
+                var postModel = new PostModel();
+                var postView = new PostView({
+                    el: '#main',
+                    model: postModel
+                });
+                var logoutView = new LogoutView({
+                    el: '#logOutAndReturnSlot'
+                });
+            } else {
+                window.location.hash = 'main';
+            }
         },
         comments: function(id) {
             var router = this;
@@ -54,17 +63,21 @@
             });
         },
         loggedinMain: function() {
-            var loggedinMainModel = new LoggedinMainModel();
-            var loggedinMainView = new LoggedinMainView({
-                el: '#main',
-                model: loggedinMainModel
-            });
-            var postButtonView = new PostButtonView({
-                el: '#postButtonContainer'
-            });
-            var logoutView = new LogoutView({
-                el: '#logOutAndReturnSlot'
-            });
+            if (isLoggedIn) {
+                var loggedinMainModel = new LoggedinMainModel();
+                var loggedinMainView = new LoggedinMainView({
+                    el: '#main',
+                    model: loggedinMainModel
+                });
+                var postButtonView = new PostButtonView({
+                    el: '#postButtonContainer'
+                });
+                var logoutView = new LogoutView({
+                    el: '#logOutAndReturnSlot'
+                });
+            } else {
+                window.location.hash = 'main';
+            }
         },
     });
 
@@ -90,6 +103,7 @@
                     email: $('#email').val(),
                     password: $('#password').val()
                 }).save().then(function(res) {
+                    isLoggedIn = true;
                     console.log('password matches');
                     window.location.hash = 'loggedinMain';
                 });
@@ -171,6 +185,8 @@
             $('#main').empty();
             $('#loginSlot').empty();
             $('#postButtonContainer').empty();
+            $('#invalidUrlSlot').empty();
+
             this.render();
             var view = this;
             this.model.on('change', function () {
@@ -229,6 +245,8 @@
         },
         initialize: function() {
             this.fetch();
+
+
         },
         save: function() {
             var latestComment = {
@@ -236,6 +254,8 @@
                 id: this.id
             };
             var model = this;
+
+
 
             console.log(latestComment);
             return $.post('/comments', latestComment).then(function(comments) {
@@ -344,6 +364,11 @@
         },
         initialize: function() {
             this.render();
+        },
+        events: {
+            'click #logout': function (event) {
+                isLoggedIn = false;
+            }
         }
     });
 
@@ -361,6 +386,14 @@
 
     //......................................................................................
 
+    $.get('/init', function(data) {
+        console.log(data);
+        if (data) {
+            isLoggedIn = true;
+        }
+    }).catch(function(xhr) {
+        isLoggedIn = false;
+    });
     var router = new Router();
     Backbone.history.start();
 })();
