@@ -152,7 +152,7 @@ app.post('/register', function(req, res){
                         id: results.rows[0].id,
                         email: email
                     }
-                    res.redirect('/#main');
+                    res.redirect('/#loggedinMain');
                 }
             });
         });
