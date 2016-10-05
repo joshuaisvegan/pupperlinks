@@ -62,6 +62,9 @@
             }).on('refresh', function() {
                 router.comments(id);
             });
+            var logoutView = new LogoutView({
+                el: '#logOutAndReturnSlot'
+            });
         },
         loggedinMain: function() {
             if (isLoggedIn) {
