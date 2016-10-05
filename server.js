@@ -220,16 +220,25 @@ app.get('/logout', function (req, res) {
 })
 
 app.post('/post', checkStatus, function (req, res) {
-
+    //console.log(req.body.title)
+    //console.log(req.session.user.id)
 
     if (url.parse(req.body.link).host == null) {
         res.sendStatus(403);
         return;
     }
 
+    console.log(req.body.title.length)
+
+    if (req.body.title.length >= 255) {
+        res.sendStatus(405);
+        return;
+    }
+
+
     var headline = req.body.title,
         link = req.body.link,
-        userid = 1;
+        userid = req.session.user.id;
 
 
     if (!req.session.user) {
