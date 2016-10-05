@@ -120,6 +120,9 @@ app.use(express.static(__dirname + '/static'));
 
 
 app.get('/init', function(req, res, next) {
+    if (!req.session.user.id) {
+        res.sendStatus(405);
+    }
 
     res.json({
         username: req.session.user.id
