@@ -197,13 +197,16 @@ app.post('/login', function (req, res) {
                         console.log(err)
                     }
                     if (doesMatch == true) {
+                        var name = results.rows[0].name;
                         var id = results.rows[0].id;
+
+
                         req.session.user = {
                             id: id,
-                            email: email
-
-
+                            email: email,
+                            name: name
                         }
+
                         res.sendStatus(200);
                     } else {
                         console.log('wrong password/correct login')
@@ -238,7 +241,6 @@ app.post('/post', checkStatus, function (req, res) {
         return;
     }
 
-
     var headline = req.body.title,
         link = req.body.link,
         userid = req.session.user.id;
@@ -266,7 +268,6 @@ app.post('/post', checkStatus, function (req, res) {
                 } else {
                     client.end();
                     console.log('it works');
-
 
                     res.sendStatus(200);
                 }
@@ -303,7 +304,7 @@ app.get('/links', function (req, res) {
 })
 
 app.get('/comments/:id', function(req, res) {
-    console.log(req.body)
+
     var client = new pg.Client(databaseUrl);
     client.connect(function(err) {
         if (err){
@@ -331,9 +332,10 @@ app.get('/comments/:id', function(req, res) {
                             if (err) {
                                 console.log(err);
                             } else {
-
+                                console.log(req.session.user)
                                 res.json({
-                                    data: results.rows
+                                    data: results.rows,
+                                    session: req.session.user
                                 });
                             }
                         });
@@ -341,23 +343,20 @@ app.get('/comments/:id', function(req, res) {
                     return;
                 }
 
-
                 var list = transformResultsIntoLinkedList(results);
 
                 client.end();
 
                 res.json({
-                    data: list
+                    data: list,
+                    session: req.session.user
                 });
             }
         });
     });
 });
 
-
 app.post('/reply/:id', function(req, res) {
-    console.log(req.body.id);
-
 
     var parent_id = req.body.id;
 
@@ -391,7 +390,8 @@ app.post('/reply/:id', function(req, res) {
 
                             client.end();
                             res.json({
-                                data: list
+                                data: list,
+                                session: req.session.user
                             });
                         }
                     });
@@ -423,7 +423,6 @@ app.post('/comments', function(req, res) {
                     console.log(err);
                 } else {
 
-
                     var client = new pg.Client(databaseUrl);
                     client.connect(function(err) {
                         if (err){
@@ -441,7 +440,8 @@ app.post('/comments', function(req, res) {
 
                                 client.end();
                                 res.json({
-                                    data: list
+                                    data: list,
+                                    session: req.session.user
                                 });
                             }
                         });
@@ -474,7 +474,8 @@ app.post('/comments', function(req, res) {
 
                                 client.end();
                                 res.json({
-                                    data: list
+                                    data: list,
+                                    session: req.session.user
                                 });
                             }
                         });
