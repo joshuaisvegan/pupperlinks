@@ -177,7 +177,9 @@
 //    ------------------------------------------------------------------------------------
     var RegisterModel = Backbone.Model.extend({
         url: '/register',
-
+        save: function() {
+            return $.post(this.url, this.toJSON());
+        }
     });
 
     var RegisterView = Backbone.View.extend({
@@ -188,6 +190,9 @@
         initialize: function() {
             $('#main').empty();
             this.render();
+        },
+        events: {
+
         }
 
     });
@@ -328,7 +333,9 @@
                         view.render();
                     }).catch(function(xhr) {
                         console.log(xhr.status);
-                        window.location = '/registration.html';
+                        if (xhr.status === 403) {
+                            alert('cannot post empty comment');
+                        }
                     });
                 } else {
                     alert('please log in or create an account to post comments');
