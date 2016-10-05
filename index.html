@@ -8,7 +8,7 @@
 
 <body id="body">
     <div class="header">
-        <div id="logoutAndReturnContainer" style:"display: none">
+        <div id="logoutAndReturnContainer" style="display: none">
             <p id="logoutAndReturnText"><a id="returnToMain" href="/#loggedinMain">Return to main page</a> | <a href="/logout" id="logOut">LOG OUT</a></p>
         </div>
         <div id="logo">
@@ -47,6 +47,7 @@
                 <script id="links" type="text/handlebars">
                 {{#.}}
                 <li id="storyContainer">
+                <div>{{timestamp}}</div>
                 <a class="mainStory" href="{{link}}">{{content}}</a><br>
                 <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
                 {{/.}}
@@ -77,15 +78,20 @@
     <div id="commentView" style="display: none">
         <div id="commentsContainer"></div>
         <script id="comments" type="text/handlebars">
+            <div>
+                {{[0].timestamp}}
+            </div>
             <h1><a id="storyLink" href="{{[0].link}}">{{[0].content}}</a></h1><br><br>
             <ul>
                 {{#.}}
-                    {{> item}}
-                    <ul>
-                        {{#each children}}
-                            {{> item}}
-                        {{/each}}
-                    </ul>
+                    {{#if comment}}
+                        {{> item}}
+                        <ul>
+                            {{#each children}}
+                                {{> item}}
+                            {{/each}}
+                        </ul>
+                    {{/if}}
                 {{/.}}
             </ul>
 
@@ -95,7 +101,9 @@
         <script id="commentPartial" type="text/handlebars">
             <li>
                 <div>
-                    <div class="commentDiv">{{comment}}
+                    <div class="commentDiv">
+                        <div>{{timestamp}}</div>
+                        <div>{{comment}}</div>
                     </div>
                     <br><button type="button" class ="replyButtons" id="replyButton-{{id}}">REPLY</button>
                     <div id="replyFormContainer-{{id}}">
@@ -124,6 +132,19 @@
             <button type="button" id="commentButton">SUBMIT</button>
             </form>
     </div>
+
+    <div id="invalidUrlSlot">
+    </div>
+    <div id="invalidUrlMessage" style="display: none">
+        LINK HAS TO START WITH HTTP OR HTTPS
+    </div>
+
+    <div id="notLoggedInSlot">
+    </div>
+    <div id="notLoggedInMessage" style="display: none">
+        YOU HAVE TO BE LOGGED IN TO POST A COMMENT
+    </div>
+
 
 
 

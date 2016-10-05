@@ -3,7 +3,6 @@
     var templates = document.querySelectorAll('script[type="text/handlebars"]');
 
     Handlebars.templates = Handlebars.templates || {};
-    console.log(Handlebars.templates);
 
     Array.prototype.slice.call(templates).forEach(function(script) {
         Handlebars.templates[script.id] = Handlebars.compile(script.innerHTML);
@@ -11,6 +10,7 @@
 
     Handlebars.registerPartial("item", $("#commentPartial").html());
 
+    var isLoggedIn;
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -21,48 +21,63 @@
             'loggedinMain': 'loggedinMain'
         },
         main: function(){
-            var mainModel = new MainModel();
-            var mainView = new MainView({
-                el: '#main',
-                model: mainModel
-            });
-            var loginModel = new LoginModel();
-            var loginView = new LoginView({
-                el: '#loginSlot',
-                model: loginModel
-            });
+            if (isLoggedIn) {
+                window.location.hash = 'loggedinMain';
+            }   else {
+                var mainModel = new MainModel();
+                var mainView = new MainView({
+                    el: '#main',
+                    model: mainModel
+                });
+                var loginModel = new LoginModel();
+                var loginView = new LoginView({
+                    el: '#loginSlot',
+                    model: loginModel
+                });
+            }
         },
         post: function(){
-            var postModel = new PostModel();
-            var postView = new PostView({
-                el: '#main',
-                model: postModel
-            });
-            var logoutView = new LogoutView({
-                el: '#logOutAndReturnSlot'
-            });
+            if (isLoggedIn) {
+                var postModel = new PostModel();
+                var postView = new PostView({
+                    el: '#main',
+                    model: postModel
+                });
+                var logoutView = new LogoutView({
+                    el: '#logOutAndReturnSlot'
+                });
+            } else {
+                window.location.hash = 'main';
+            }
         },
         comments: function(id) {
+            var router = this;
             var commentsModel = new CommentsModel({
                 id: id
             });
             var commentsView = new CommentsView({
                 el: '#main',
                 model: commentsModel
+            }).on('refresh', function() {
+                router.comments(id);
             });
         },
         loggedinMain: function() {
-            var loggedinMainModel = new LoggedinMainModel();
-            var loggedinMainView = new LoggedinMainView({
-                el: '#main',
-                model: loggedinMainModel
-            });
-            var postButtonView = new PostButtonView({
-                el: '#postButtonContainer'
-            });
-            var logoutView = new LogoutView({
-                el: '#logOutAndReturnSlot'
-            });
+            if (isLoggedIn) {
+                var loggedinMainModel = new LoggedinMainModel();
+                var loggedinMainView = new LoggedinMainView({
+                    el: '#main',
+                    model: loggedinMainModel
+                });
+                var postButtonView = new PostButtonView({
+                    el: '#postButtonContainer'
+                });
+                var logoutView = new LogoutView({
+                    el: '#logOutAndReturnSlot'
+                });
+            } else {
+                window.location.hash = 'main';
+            }
         },
     });
 
@@ -88,6 +103,7 @@
                     email: $('#email').val(),
                     password: $('#password').val()
                 }).save().then(function(res) {
+                    isLoggedIn = true;
                     console.log('password matches');
                     window.location.hash = 'loggedinMain';
                 });
@@ -127,6 +143,7 @@
             this.$el.html(mainPage);
 
             var linksFromDB = this.model.get('data');
+            console.log(linksFromDB);
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
 
@@ -168,6 +185,8 @@
             $('#main').empty();
             $('#loginSlot').empty();
             $('#postButtonContainer').empty();
+            $('#invalidUrlSlot').empty();
+
             this.render();
             var view = this;
             this.model.on('change', function () {
@@ -208,9 +227,13 @@
                     console.log(res);
                     console.log('submitted');
                     window.location.hash = 'loggedinMain';
-                }).catch(function(err) {
-                    console.log(err);
-                    window.location = '/registration.html';
+                }).catch(function(xhr) {
+                    console.log(xhr.status);
+                    if (xhr.status === 403) {
+                        var urlErrorView = new UrlErrorView({
+                            el: '#invalidUrlSlot'
+                        });
+                    }
                 });
             }
         }
@@ -222,6 +245,8 @@
         },
         initialize: function() {
             this.fetch();
+
+
         },
         save: function() {
             var latestComment = {
@@ -229,6 +254,8 @@
                 id: this.id
             };
             var model = this;
+
+
 
             console.log(latestComment);
             return $.post('/comments', latestComment).then(function(comments) {
@@ -252,6 +279,7 @@
         },
         initialize: function() {
             $('#main').empty();
+            $('#invalidUrlSlot').empty();
             this.render();
             var view = this;
             this.model.on('change', function () {
@@ -266,8 +294,8 @@
                 }).save().then(function(res) {
                     console.log('post saved');
                     view.render();
-                }).catch(function(err) {
-                    console.log(err);
+                }).catch(function(xhr) {
+                    console.log(xhr.status);
                     window.location = '/registration.html';
                 });
             },
@@ -284,7 +312,8 @@
                     el: '#replyFormContainer-'+buttonId,
                     model: replyModel
                 }).on('replyComplete', function() {
-                    view.render();
+
+                    view.undelegateEvents().trigger('refresh');
                     console.log('render');
                 });
             }
@@ -330,8 +359,24 @@
     var LogoutView = Backbone.View.extend({
         render: function() {
             var logout = $('#logoutAndReturnContainer').html();
-            console.log(logout);
             this.$el.html(logout);
+
+        },
+        initialize: function() {
+            this.render();
+        },
+        events: {
+            'click #logout': function (event) {
+                isLoggedIn = false;
+            }
+        }
+    });
+
+    //......................................................................................
+    var UrlErrorView = Backbone.View.extend({
+        render: function() {
+            var invalidUrlMessage = $('#invalidUrlMessage').html();
+            this.$el.html(invalidUrlMessage);
 
         },
         initialize: function() {
@@ -339,6 +384,16 @@
         }
     });
 
+    //......................................................................................
+
+    $.get('/init', function(data) {
+        console.log(data);
+        if (data) {
+            isLoggedIn = true;
+        }
+    }).catch(function(xhr) {
+        isLoggedIn = false;
+    });
     var router = new Router();
     Backbone.history.start();
 })();
