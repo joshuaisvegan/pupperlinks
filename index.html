@@ -26,7 +26,11 @@
     <div id="logOutAndReturnSlot">
     </div><br><br><br><br>
 
+    <div id="postButtonContainer"></div>
 
+    <div id="postButton" style="display: none">
+        <button type="button" id="newLinkButton">POST A PUPPER!</button>
+    </div>
 
     <div id="loginContainer" style="display: none">
         <form id="loginForm">
@@ -47,20 +51,16 @@
                 <script id="links" type="text/handlebars">
                 {{#.}}
                 <li id="storyContainer">
-                <div>{{timestamp}}</div>
-                <a class="mainStory" href="{{link}}">{{content}}</a><br>
-                <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">Comments</a>
+                <a class="mainStory" href="{{link}}">{{content}}</a>
+                <div class="storyTimestamp">posted at {{timestamp}}</div>
+                <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">comments</a>
                 {{/.}}
                 </script>
             </ul>
         </div>
     </div>
 
-    <div id="postButtonContainer"></div>
 
-    <div id="postButton" style="display: none">
-        <button type="button" id="newLinkButton">POST A PUPPER!</button>
-    </div>
 
 
     <div id="postForm" style="display: none">
@@ -78,9 +78,6 @@
     <div id="commentView" style="display: none">
         <div id="commentsContainer"></div>
         <script id="comments" type="text/handlebars">
-            <div>
-                {{[0].timestamp}}
-            </div>
             <h1><a id="storyLink" href="{{[0].link}}">{{[0].content}}</a></h1><br><br>
             <ul>
                 {{#.}}
@@ -102,10 +99,10 @@
             <li>
                 <div>
                     <div class="commentDiv">
-                        <div>{{timestamp}}</div>
-                        <div>{{comment}}</div>
+                        <div class="commentText">{{comment}}</div>
+                        <div class="commentTimestamp">posted at {{timestamp}}</div>
                     </div>
-                    <br><button type="button" class ="replyButtons" id="replyButton-{{id}}">REPLY</button>
+                    <button type="button" class ="replyButtons" id="replyButton-{{id}}">REPLY</button>
                     <div id="replyFormContainer-{{id}}">
 
                         <div class="replyForm" style="display: none">

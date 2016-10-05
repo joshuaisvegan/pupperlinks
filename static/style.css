@@ -26,9 +26,10 @@
 
 #loginForm{
 	border: solid black 1px;
-	margin-left: 10px;
-	margin-top: 5px;
+	margin-left: 5px;
+	margin-top: 12px;
 	margin-right: 10px;
+	margin-bottom: 10px;
 	padding: 5px;
     display:inline-block;
     float:right;
@@ -54,8 +55,25 @@ h1 {
     font-size: 218%;
 }
 
+#introText {
+	margin-top: 60px;
+	font-family: arial;
+	margin-top: 40px;
+	margin-left: 5px;
+}
+
+#logOutAndReturnSlot {
+	font-family: arial;
+	margin-left: 7px;
+	margin-top:15px;
+	color: red;
+    display:inline-block;
+	position:absolute;
+    float:left;
+}
+
 #logoutAndReturnContainer {
-	z-index: 100;
+	border-bottom: black solid 1px;
 	margin-left: 5px;
 	margin-top:5px;
 	color: red;
@@ -76,6 +94,10 @@ h1 {
 	color: grey;
 }
 
+#postButtonContainer {
+	margin-left: 10px;
+}
+
 #main {
 	margin-top: 20px;
 	margin-left: 20px;
@@ -84,13 +106,15 @@ h1 {
 
 
 #emailLabel {
+	font-family: arial;
     width: 200px;
     margin: 0px;
-    color: black
+    color: grey;
 }
 
 #passwordLabel {
-    color: black;
+	font-family: arial;
+    color: grey;
 }
 
 #loginButton {
@@ -98,16 +122,14 @@ h1 {
 }
 
 #registerLink {
+	font-family: arial;
     float:right;
-    color: black;
+	padding-top: 10px;
+    color: grey;
 }
 
 a {
     text-decoration: none;
-}
-
-#regForm{
-
 }
 
 #userPost {
@@ -122,58 +144,34 @@ a {
 	margin-left: 75px;
 }
 
+h3 {
+	font-family: arial;
+	color: grey;
+}
+
 #regForm {
 	width: 200px;
-	height:200px;
-	padding-top: 40px;
+	height:300px;
+	padding-top: 20px;
 	padding-bottom: 40px;
 	padding-left: 50px;
-	padding-right: 10px;
-	margin-top: 20px;
-	border: solid black 3px;
-	margin-left: 75px;
+	padding-right: 30px;
+	margin-top: 30px;
+	border: solid grey 3px;
+	margin-left: 15px;
 }
 
-.button {
-    position: relative;
-    background-color: #4CAF50;
-    border: none;
-    font-size: 28px;
-    color: #FFFFFF;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    text-decoration: none;
-    overflow: hidden;
-    cursor: pointer;
+.regisLabels {
+	font-family: arial;
+	color: grey;
 }
 
-.button:after {
-    content: "";
-    background: #f1f1f1;
-    display: block;
-    position: absolute;
-    padding-top: 300%;
-    padding-left: 350%;
-    margin-left: -20px !important;
-    margin-top: -120%;
-    opacity: 0;
-    transition: all 0.8s
+#linkContainer {
+	margin-top: 50px;
 }
 
-.button:active:after {
-    padding: 0;
-    margin: 0;
-    opacity: 1;
-    transition: 0s
-}
-
-#postButtonContainer {
-    margin-top: 20px;
-	position: absolute;
-	right: 0px;
+li {
+	list-style-type: none;
 }
 
 #storyLink {
@@ -183,23 +181,44 @@ a {
 }
 
 #storyContainer {
+	margin-top: 20px;
 	margin-bottom: 20px;
 }
 
 .mainStory {
+	font-family: arial;
 	color: red;
-	margin-bottom: 5px;
+	margin-bottom: 1px;
 	display:inline-block;
 }
 
+.storyTimestamp {
+	font-family: arial;
+	color: grey;
+	font-size: 10pt;
+	margin-bottom: 5px;
+}
+
 .mainComment {
-	margin-left: 28px;
-	padding: px;
-	border: solid black 2px;
-	background-color: black;
+    font-size: 10pt;
+	font-family: arial;
 	color: white;
+    border: solid grey 1px;
+    padding: 2px;
+    background-color: grey;
 }
 
 .commentDiv {
 	margin-top: 20px;
+}
+
+.commentText {
+    font-family: arial;
+    color: black;
+}
+
+.commentTimestamp {
+    font-family: arial;
+    font-size: 10pt;
+    color: grey;
 }
