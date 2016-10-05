@@ -13,18 +13,19 @@
         </div>
         <div id="logo">
             <h1>PUPPERVIEW</h1>
-
                 <img src="pug.gif" class="pug"></img>
-
         </div>
-
-
     </div>
 
     <div id="loginSlot">
     </div>
     <div id="logOutAndReturnSlot">
-    </div><br><br><br><br>
+    </div><br><br><br>
+
+    <div id="introText"><br><br>We know what you're thinking.<br><br>
+        Did the internet really <i>need</i> another vector for dog videos?<br><strong>YOU BETCHA.</strong> We’ve done our part so that you can do yours.
+        <br><br>Have at it, hoss.
+    </div>
 
     <div id="postButtonContainer"></div>
 
@@ -52,7 +53,7 @@
                 {{#.}}
                 <li id="storyContainer">
                 <a class="mainStory" href="{{link}}">{{content}}</a>
-                <div class="storyTimestamp">posted at {{timestamp}}</div>
+                <div class="storyTimestamp">posted on {{timestamp}}</div>
                 <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">comments</a>
                 {{/.}}
                 </script>
@@ -128,6 +129,22 @@
                           <input type="text" name="reply"><br><br>
                           <button type="button" class="sendButton" id="sendButton-{{id}}">SEND</button>
                       </form>
+            <li>
+                <div>
+                    <div class="commentDiv">
+                        <div class="commentText">{{comment}}</div>
+                        <div class="commentTimestamp">posted on {{timestamp}} by {{name}}</div>
+                    </div>
+                    <button type="button" class ="replyButtons" id="replyButton-{{id}}">REPLY</button>
+                    <div id="replyFormContainer-{{id}}">
+
+                        <div class="replyForm" style="display: none">
+                          <form>
+                              <label for="input">COMMENT</label>
+                              <input type="text" name="reply"><br><br>
+                              <button type="button" class="sendButton" id="sendButton-{{id}}">SEND</button>
+                          </form>
+                        </div>
                     </div>
                 </div>
             </div>
