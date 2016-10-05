@@ -18,7 +18,8 @@
             'main': 'main',
             'post': 'post',
             'comments/:id': 'comments',
-            'loggedinMain': 'loggedinMain'
+            'loggedinMain': 'loggedinMain',
+            'register': 'register'
         },
         main: function(){
             if (isLoggedIn) {
@@ -79,6 +80,17 @@
                 window.location.hash = 'main';
             }
         },
+        register: function () {
+            if (isLoggedIn) {
+                window.location.hash = 'loggedinMain';
+            }  else {
+                var registerModel = new RegisterModel();
+                var registerView = new RegisterView({
+                    el: '#main',
+                    model: registerModel
+                });
+            }
+        }
     });
 
 //------------------------------------------------------------------------------------
@@ -162,7 +174,31 @@
             }
         }
     });
-    //    ------------------------------------------------------------------------------------
+//    ------------------------------------------------------------------------------------
+    var RegisterModel = Backbone.Model.extend({
+        url: '/register',
+        save: function() {
+            return $.post(this.url, this.toJSON());
+        }
+    });
+
+    var RegisterView = Backbone.View.extend({
+        render: function() {
+            var register = $('#registrationFormContainer').html();
+            this.$el.html(register);
+        },
+        initialize: function() {
+            $('#main').empty();
+            this.render();
+        },
+        events: {
+
+        }
+
+    });
+
+//    ------------------------------------------------------------------------------------
+
     var LoggedinMainModel = Backbone.Model.extend({
         url: '/links',
 
@@ -288,34 +324,44 @@
         },
         events: {
             'click #commentButton': function(event) {
-                var view = this;
-                this.model.set({
-                    comment: $("input[name|='commentInput']").val(),
-                }).save().then(function(res) {
-                    console.log('post saved');
-                    view.render();
-                }).catch(function(xhr) {
-                    console.log(xhr.status);
-                    window.location = '/registration.html';
-                });
+                if (isLoggedIn) {
+                    var view = this;
+                    this.model.set({
+                        comment: $("input[name|='commentInput']").val(),
+                    }).save().then(function(res) {
+                        console.log('post saved');
+                        view.render();
+                    }).catch(function(xhr) {
+                        console.log(xhr.status);
+                        if (xhr.status === 403) {
+                            alert('cannot post empty comment');
+                        }
+                    });
+                } else {
+                    alert('please log in or create an account to post comments');
+                }
             },
             'click .replyButtons': function(event) {
-                var linkId = this.model.id;
-                console.log(linkId);
-                var buttonId = (event.currentTarget.id).substr(12);
-                var view = this;
-                var replyModel = new ReplyModel({
-                    id: buttonId,
-                    linkId: linkId
-                });
-                var replyView = new ReplyView({
-                    el: '#replyFormContainer-'+buttonId,
-                    model: replyModel
-                }).on('replyComplete', function() {
+                if (isLoggedIn) {
+                    var linkId = this.model.id;
+                    console.log(linkId);
+                    var buttonId = (event.currentTarget.id).substr(12);
+                    var view = this;
+                    var replyModel = new ReplyModel({
+                        id: buttonId,
+                        linkId: linkId
+                    });
+                    var replyView = new ReplyView({
+                        el: '#replyFormContainer-'+buttonId,
+                        model: replyModel
+                    }).on('replyComplete', function() {
+                        view.undelegateEvents().trigger('refresh');
+                        console.log('render');
+                    });
+                } else {
+                    alert('please log in or create an account to post comments');
 
-                    view.undelegateEvents().trigger('refresh');
-                    console.log('render');
-                });
+                }
             }
         }
     });
