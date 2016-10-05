@@ -18,7 +18,8 @@
             'main': 'main',
             'post': 'post',
             'comments/:id': 'comments',
-            'loggedinMain': 'loggedinMain'
+            'loggedinMain': 'loggedinMain',
+            'register': 'register'
         },
         main: function(){
             if (isLoggedIn) {
@@ -79,6 +80,17 @@
                 window.location.hash = 'main';
             }
         },
+        register: function () {
+            if (isLoggedIn) {
+                window.location.hash = 'loggedinMain';
+            }  else {
+                var registerModel = new RegisterModel();
+                var registerView = new RegisterView({
+                    el: '#main',
+                    model: registerModel
+                });
+            }
+        }
     });
 
 //------------------------------------------------------------------------------------
@@ -162,7 +174,26 @@
             }
         }
     });
-    //    ------------------------------------------------------------------------------------
+//    ------------------------------------------------------------------------------------
+    var RegisterModel = Backbone.Model.extend({
+        url: '/register',
+
+    });
+
+    var RegisterView = Backbone.View.extend({
+        render: function() {
+            var register = $('#registrationFormContainer').html();
+            this.$el.html(register);
+        },
+        initialize: function() {
+            $('#main').empty();
+            this.render();
+        }
+
+    });
+
+//    ------------------------------------------------------------------------------------
+
     var LoggedinMainModel = Backbone.Model.extend({
         url: '/links',
 
