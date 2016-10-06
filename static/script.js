@@ -22,6 +22,8 @@
             'register': 'register'
         },
         main: function(){
+            console.log(isLoggedIn);
+
             $('#main').off();
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
@@ -90,6 +92,7 @@
             }
         },
         register: function () {
+            console.log(isLoggedIn);
             $('#main').off();
 
             if (isLoggedIn) {
@@ -118,6 +121,8 @@
             this.$el.html(login);
         },
         initialize: function(){
+            console.log(isLoggedIn);
+
             this.render();
         },
         events: {
@@ -200,6 +205,7 @@
         },
         initialize: function() {
             $('#main').empty();
+            $('#loginSlot').empty();
             this.render();
         },
         events: {
@@ -214,15 +220,9 @@
                     window.location.hash = 'loggedinMain';
                 }).catch(function(xhr) {
                     console.log(xhr.status);
-                    if (xhr.status === 403) {
-                        var urlErrorView = new UrlErrorView({
-                            el: '#invalidUrlSlot'
-                        });
-                    }
                 });
             }
         }
-
     });
 
 //    ------------------------------------------------------------------------------------
@@ -250,6 +250,7 @@
             $('#loginSlot').empty();
             $('#postButtonContainer').empty();
             $('#invalidUrlSlot').empty();
+            console.log(isLoggedIn);
 
             this.render();
             var view = this;
@@ -440,7 +441,8 @@
             this.render();
         },
         events: {
-            'click #logout': function (event) {
+            'click #logOut': function (event) {
+                console.log('logged out');
                 isLoggedIn = false;
             }
         }
@@ -461,13 +463,17 @@
     //......................................................................................
 
     $.get('/init', function(data) {
-        console.log(data);
-        if (data) {
+        console.log(data.username);
+        if (data.username) {
             isLoggedIn = true;
+        } else {
+            isLoggedIn = false;
         }
+        console.log(isLoggedIn);
+        var router = new Router();
+        Backbone.history.start();
     }).catch(function(xhr) {
         isLoggedIn = false;
     });
-    var router = new Router();
-    Backbone.history.start();
+
 })();
