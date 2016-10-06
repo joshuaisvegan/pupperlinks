@@ -174,7 +174,6 @@
             console.log(linksFromDB);
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
-
         },
         initialize: function(){
             $('#main').empty();
@@ -187,6 +186,9 @@
         events: {
             'click #commentsButton': function (event) {
                 window.location.hash = 'comments';
+            },
+            'click .likeButton': function(event) {
+                alert('you must be loggedin to like a link');
             }
         }
     });
