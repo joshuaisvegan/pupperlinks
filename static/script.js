@@ -11,6 +11,7 @@
     Handlebars.registerPartial("item", $("#commentPartial").html());
 
     var isLoggedIn;
+    var csrf;
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -129,7 +130,8 @@
             'click #loginButton': function(event) {
                 this.model.set({
                     email: $('#email').val(),
-                    password: $('#password').val()
+                    password: $('#password').val(),
+                    _csrf: csrf
                 }).save().then(function(res) {
                     isLoggedIn = true;
                     console.log('password matches');
@@ -215,6 +217,7 @@
                     name: $('#registrationName').val(),
                     email: $('#registrationEmail').val(),
                     password: $('#registrationPassword').val(),
+                    _csrf: csrf
                 }).save().then(function(res) {
                     isLoggedIn = true;
                     console.log('loggedin');
@@ -287,7 +290,8 @@
             'click #submitButton': function(event) {
                 this.model.set({
                     title: $("input[name|='headline']").val(),
-                    link: $("input[name|='link']").val()
+                    link: $("input[name|='link']").val(),
+                    _csrf: csrf
                 }).save().then(function(res) {
 
                     console.log(res);
@@ -317,7 +321,8 @@
         save: function() {
             var latestComment = {
                 comment: this.changed.comment,
-                id: this.id
+                id: this.id,
+                _csrf: csrf
             };
             var model = this;
 
@@ -358,6 +363,7 @@
                     var view = this;
                     this.model.set({
                         comment: $("input[name|='commentInput']").val(),
+                        _csrf: csrf
                     }).save().then(function(res) {
                         console.log('post saved');
                         view.render();
@@ -422,7 +428,8 @@
                 this.model.set({
                     reply: this.$("input[name|='reply']").val(),
                     id: this.model.id,
-                    linkId: this.model.get('linkId')
+                    linkId: this.model.get('linkId'),
+                    _csrf: csrf
                 }).save().then(function(res) {
                     console.log('saved');
                     view.undelegateEvents().trigger('replyComplete');
@@ -464,7 +471,9 @@
     //......................................................................................
 
     $.get('/init', function(data) {
-        console.log(data.username);
+        console.log(data);
+        csrf = data.csrfToken;
+        console.log(csrf);
         if (data.username) {
             isLoggedIn = true;
         } else {
