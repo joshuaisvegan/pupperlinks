@@ -35,6 +35,9 @@ var transformResultsIntoLinkedList = function (results) {
 
     var comments = results.rows;
 
+
+
+
     var nodes = [];
     var toplevelNodes = [];
     var lookupList = {};
@@ -47,18 +50,20 @@ var transformResultsIntoLinkedList = function (results) {
             children: [],
             user_id: comments[i].user_id,
             comment: comments[i].comment,
-            timestamp: Date(comments[i].timestamp),
+            timestamp: comments[i].timestamp,
             link: comments[i].link,
             content: comments[i].content
         };
         lookupList[n.id] = n;
-
+        console.log(comments[i].timestamp, Object.prototype.toString.call(comments[i].timestamp))
         nodes.push(n);
 
         if (n.parent_id == null) {
             toplevelNodes.push(n);
         }
     }
+
+
 
     for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
@@ -122,10 +127,10 @@ app.use(express.static(__dirname + '/static'));
 
 app.get('/init', function(req, res, next) {
     if (!req.session.user) {
-        res.sendStatus(405);
+        res.json({});
     } else {
         res.json({
-            username: req.session.user.id
+            username: req.session.user.name
         });
     }
 });
@@ -305,7 +310,7 @@ app.get('/links', function (req, res) {
                 client.end();
 
                 for (var row in results.rows) {
-                    results.rows[row].timestamp = Date(results.rows[row].timestamp);
+                    results.rows[row].timestamp = results.rows[row].timestamp;
                 }
                 res.json({
 
@@ -331,7 +336,7 @@ app.get('/comments/:id', function(req, res) {
             if (err) {
                 console.log(err);
             } else {
-                console.log(results)
+
                 if (results.rows.length == 0) {
 
                     var clientN = new pg.Client(databaseUrl);
@@ -369,8 +374,9 @@ app.get('/comments/:id', function(req, res) {
 });
 
 app.post('/reply/:id', function(req, res) {
-    if (!req.session.user) {
+    if (!req.session.user && !req.body.id) {
         res.redirect('/comments/:id');
+        return;
     }
 
     var parent_id = req.body.id;
