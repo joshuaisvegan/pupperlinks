@@ -86,13 +86,13 @@
                 var logoutView = new LogoutView({
                     el: '#logOutAndReturnSlot'
                 });
+
             } else {
                 window.location.hash = 'main';
             }
         },
         register: function () {
             $('#main').off();
-
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
             }  else {
@@ -264,9 +264,27 @@
         events: {
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
+            },
+            'click .likeButton': function(event) {
+                var likeId = (event.currentTarget.id).substr(11);
+                console.log(likeId);
+
+                var likesModel = new LikesModel({
+                    likeId: likeId,
+                    _csrf: csrf
+                });
             }
         }
     });
+
+    //......................................................................................
+    var LikesModel = Backbone.Model.extend({
+        url: '/likes',
+        initialize: function() {
+            $.post(this.url, this.toJSON());
+        },
+    });
+
 //    ------------------------------------------------------------------------------------
     var PostModel = Backbone.Model.extend({
         url: '/post',
@@ -314,8 +332,6 @@
         },
         initialize: function() {
             this.fetch();
-
-
         },
         save: function() {
             var latestComment = {
@@ -324,9 +340,6 @@
                 _csrf: csrf
             };
             var model = this;
-
-
-
             console.log(latestComment);
             return $.post('/comments', latestComment).then(function(comments) {
                 model.set(comments);
