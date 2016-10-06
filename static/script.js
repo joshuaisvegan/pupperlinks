@@ -203,7 +203,24 @@
             this.render();
         },
         events: {
-
+            'click #registerButton': function(event) {
+                this.model.set({
+                    name: $('#name').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val(),
+                }).save().then(function(res) {
+                    isLoggedIn = true;
+                    console.log('loggedin');
+                    window.location.hash = 'loggedinMain';
+                }).catch(function(xhr) {
+                    console.log(xhr.status);
+                    if (xhr.status === 403) {
+                        var urlErrorView = new UrlErrorView({
+                            el: '#invalidUrlSlot'
+                        });
+                    }
+                });
+            }
         }
 
     });
