@@ -22,9 +22,9 @@
     <div id="logOutAndReturnSlot">
     </div><br><br><br>
 
-    <div id="introText"><br><br><br>We know what you're thinking.<br><br>
-        Did the internet really <i>need</i> another vector for dog videos?<br><strong>YOU BETCHA.</strong> We’ve done our part so that you can do yours.
-        <br><br>Have at it, hoss.
+    <div id="introText">We know what you're thinking.<br><br>
+        Did the internet really <i>need</i> another vector for dog videos? <strong>YOU BETCHA.</strong><br><br>We’ve done our part so that you can do yours. Have at it, hoss.
+        <br><br>With love, <i>The Team</i>.
     </div>
 
     <div id="postButtonContainer"></div>
@@ -51,21 +51,23 @@
             <ul>
                 <script id="links" type="text/handlebars">
                 {{#.}}
-                <li id="storyContainer">
-                <a class="mainStory" href="{{link}}">{{content}}</a>
-                <div class="storyTimestamp">posted on {{timestamp}} by {{name}}</div>
-                <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">comments</a> <div id="likeButtonSlot"></div>
+                    <li id="storyContainer">
+                    <a class="mainStory" href="{{link}}">{{content}}</a>
+                    <div class="storyTimestamp">posted on {{timestamp}} by {{name}}</div>
+                    <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">comments</a>
+                    <div class="likeButtonContainer">
+                        <form class="likeButtonForm">
+                            <input class="likeButton" id="likeButton-{{id}}" type="button" value="like">
+                        </form>
+                        <div>{{likes}}</div>
+                    </div>
                 {{/.}}
                 </script>
             </ul>
         </div>
     </div>
 
-    <div id="likeButtonContainer" style="display: none">
-        <form>
-            <input id="likeButton" type="button" value="like">
-        </form>
-    </div>
+
 
     <div id="postForm" style="display: none">
         <form id="userPost">

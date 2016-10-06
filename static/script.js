@@ -23,8 +23,6 @@
             'register': 'register'
         },
         main: function(){
-            console.log(isLoggedIn);
-
             $('#main').off();
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
@@ -88,14 +86,13 @@
                 var logoutView = new LogoutView({
                     el: '#logOutAndReturnSlot'
                 });
+
             } else {
                 window.location.hash = 'main';
             }
         },
         register: function () {
-            console.log(isLoggedIn);
             $('#main').off();
-
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
             }  else {
@@ -155,7 +152,8 @@
             'click #newLinkButton': function(event) {
                 console.log('post');
                 window.location.hash = 'post';
-            }            }
+            }
+        }
     });
 //    ------------------------------------------------------------------------------------
     var MainModel = Backbone.Model.extend({
@@ -246,6 +244,7 @@
             this.$el.html(mainPage);
 
             var linksFromDB = this.model.get('data');
+            console.log(linksFromDB);
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
         },
@@ -265,9 +264,27 @@
         events: {
             'click #newLinkButton': function(event) {
                 window.location.hash = 'post';
+            },
+            'click .likeButton': function(event) {
+                var likeId = (event.currentTarget.id).substr(11);
+                console.log(likeId);
+
+                var likesModel = new LikesModel({
+                    likeId: likeId,
+                    _csrf: csrf
+                });
             }
         }
     });
+
+    //......................................................................................
+    var LikesModel = Backbone.Model.extend({
+        url: '/likes',
+        initialize: function() {
+            $.post(this.url, this.toJSON());
+        },
+    });
+
 //    ------------------------------------------------------------------------------------
     var PostModel = Backbone.Model.extend({
         url: '/post',
@@ -315,8 +332,6 @@
         },
         initialize: function() {
             this.fetch();
-
-
         },
         save: function() {
             var latestComment = {
@@ -325,9 +340,6 @@
                 _csrf: csrf
             };
             var model = this;
-
-
-
             console.log(latestComment);
             return $.post('/comments', latestComment).then(function(comments) {
                 model.set(comments);
@@ -471,9 +483,7 @@
     //......................................................................................
 
     $.get('/init', function(data) {
-        console.log(data);
         csrf = data.csrfToken;
-        console.log(csrf);
         if (data.username) {
             isLoggedIn = true;
         } else {
