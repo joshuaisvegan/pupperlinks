@@ -2,11 +2,10 @@ const express = require('express');
 const app = express();
 const pg = require('pg');
 const cookieSession = require('cookie-session');
-const csrf = require('csurf');
+var csrf = require('csurf');
 const hb = require('express-handlebars');
 const bcrypt = require('bcrypt');
 const url = require('url');
-
 
 var databaseUrl = process.env.DATABASE_URL;
 
@@ -14,12 +13,6 @@ if (!databaseUrl){
     databaseUrl = 'postgres://' + require('./credentials').pgUser + ':' + require('./credentials').pgPassword + '@localhost:5432/users';
 }
 
-//
-// app.use(function(req, res, next) {
-//     req.method == 'GET' && res.setHeader('csrf-Token', req.csrf());
-//     next();
-//
-// })
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -117,14 +110,18 @@ app.use(cookieSession({
 }));
 
 app.use(express.static(__dirname + '/static'));
-
+app.use(csrf());
 
 app.get('/init', function(req, res, next) {
     if (!req.session.user) {
-        res.json({});
+        res.json({
+            'csrf-Token': req.csrfToken()
+        });
     } else {
         res.json({
-            username: req.session.user.name
+            username: req.session.user.name,
+            'csrf-Token': req.csrfToken()
+
         });
     }
 });
@@ -135,6 +132,7 @@ app.get('/', function(req, res, next) {
 });
 
 app.post('/register', function(req, res){
+    console.log(req.body);
 
     var name = req.body.name;
     var email = req.body.email;
@@ -153,8 +151,6 @@ app.post('/register', function(req, res){
                     console.log(err);
 
                     var duplicateEmailError = ['Email exists in a database'];
-
-                    //res.render('index', {emailError: duplicateEmailError});
 
                 } else {
                     client.end();
@@ -177,7 +173,6 @@ app.get('/register', function(req, res, next) {
 });
 
 app.post('/login', function (req, res) {
-
 
     if (!req.body.email.length || !req.body.password.length) {
 
