@@ -25,7 +25,7 @@
 }
 
 #loginForm{
-	border: solid black 1px;
+	border: solid black 3px;
 	margin-left: 5px;
 	margin-top: 12px;
 	margin-right: 10px;
@@ -56,11 +56,14 @@ h1 {
 }
 
 #introText {
-    width: 40%;
-	margin-top: 25px;
+    background-color: grey;
+    color: white;
+    width: 28%;
+    padding: 5px;
+	margin-top: 60px;
 	font-family: arial;
     margin-bottom: 10px;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 #logOutAndReturnSlot {
@@ -96,7 +99,8 @@ h1 {
 }
 
 #postButtonContainer {
-	margin-left: 10px;
+	margin-left: 5px;
+    margin-top: 25px;
 }
 
 #main {
@@ -178,7 +182,8 @@ h3 {
 }
 
 #linkContainer {
-	margin-top: 50px;
+	margin-top: 25px;
+    margin-left: 5px;
 }
 
 li {
