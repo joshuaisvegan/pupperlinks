@@ -49,10 +49,15 @@
 
 h1 {
     display:inline;
+    text-decoration: none;
     margin: 0px;
     color: white;
     font-family: arial;
     font-size: 218%;
+}
+
+#logoLink {
+    color: white;
 }
 
 #introText {
@@ -68,7 +73,7 @@ h1 {
 
 #logOutAndReturnSlot {
 	font-family: arial;
-	margin-left: 7px;
+	margin-left: 230px;
 	margin-top:15px;
 	color: red;
     display:inline-block;
@@ -78,7 +83,7 @@ h1 {
 
 #logoutAndReturnContainer {
 	border-bottom: black solid 1px;
-	margin-left: 5px;
+	margin-left: 230px;
 	margin-top:5px;
 	color: red;
     display:inline-block;
