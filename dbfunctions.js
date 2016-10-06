@@ -303,7 +303,6 @@ exports.getLinksAndLikes = function (req, res) {
                 }
 
                 Promise.all(likePromises).then(function() {
-                    console.log(results.rows)
 
                     res.json({
 
