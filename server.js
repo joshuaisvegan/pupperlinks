@@ -115,12 +115,12 @@ app.use(csrf());
 app.get('/init', function(req, res, next) {
     if (!req.session.user) {
         res.json({
-            'csrf-Token': req.csrfToken()
+            'csrfToken': req.csrfToken()
         });
     } else {
         res.json({
             username: req.session.user.name,
-            'csrf-Token': req.csrfToken()
+            'csrfToken': req.csrfToken()
 
         });
     }
