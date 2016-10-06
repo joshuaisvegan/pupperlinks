@@ -23,8 +23,6 @@
             'register': 'register'
         },
         main: function(){
-            console.log(isLoggedIn);
-
             $('#main').off();
             if (isLoggedIn) {
                 window.location.hash = 'loggedinMain';
@@ -93,7 +91,6 @@
             }
         },
         register: function () {
-            console.log(isLoggedIn);
             $('#main').off();
 
             if (isLoggedIn) {
@@ -155,7 +152,8 @@
             'click #newLinkButton': function(event) {
                 console.log('post');
                 window.location.hash = 'post';
-            }            }
+            }
+        }
     });
 //    ------------------------------------------------------------------------------------
     var MainModel = Backbone.Model.extend({
@@ -246,6 +244,7 @@
             this.$el.html(mainPage);
 
             var linksFromDB = this.model.get('data');
+            console.log(linksFromDB);
             var renderedLinks = Handlebars.templates.links(linksFromDB);
             $('#linkContainer').html(renderedLinks);
         },
@@ -471,9 +470,7 @@
     //......................................................................................
 
     $.get('/init', function(data) {
-        console.log(data);
         csrf = data.csrfToken;
-        console.log(csrf);
         if (data.username) {
             isLoggedIn = true;
         } else {
