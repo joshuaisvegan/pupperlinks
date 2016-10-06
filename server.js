@@ -6,7 +6,8 @@ var csrf = require('csurf');
 const hb = require('express-handlebars');
 const bcrypt = require('bcrypt');
 const url = require('url');
-var functions = require('./functions');
+var functions = require('./functions.js');
+var dbfunctions = require('./dbfunctions.js');
 
 var databaseUrl = process.env.DATABASE_URL;
 
@@ -66,41 +67,8 @@ app.get('/', function(req, res, next) {
     res.sendFile(__dirname+ '/index.html');
 });
 
-app.post('/register', function(req, res){
-    console.log(req.body);
-
-    var name = req.body.name;
-    var email = req.body.email;
-    var client = new pg.Client(databaseUrl);
-    client.connect(function (err) {
-        if (err){
-            throw err;
-        }
-        functions.hashPassword(req.body.password, function(err, hash) {
-            if (err) {
-                console.log(err);
-            }
-            var query = "INSERT INTO usersLinks(name, email, hash) VALUES($1, $2, $3) RETURNING id"
-            client.query(query, [name, email, hash], function(err, results) {
-                if (err) {
-                    console.log(err);
-
-                    var duplicateEmailError = ['Email exists in a database'];
-
-                } else {
-                    client.end();
-
-                    req.session.user = {
-
-                        id: results.rows[0].id,
-                        email: email,
-                        name: name
-                    }
-                    res.redirect('/#loggedinMain');
-                }
-            });
-        });
-    });
+app.post('/register', function (req, res) {
+    dbfunctions.register(req, res);
 });
 
 app.get('/register', function(req, res, next) {
@@ -344,6 +312,8 @@ app.post('/reply/:id', function(req, res) {
         });
     });
 })
+
+
 app.post('/comments', function(req, res) {
 
     if (!req.session.user) {
@@ -431,6 +401,51 @@ app.post('/comments', function(req, res) {
             }
         });
     }
+});
+
+app.post('/likes', function (req, res) {
+
+    if (!req.session.user) {
+        res.redirect('/links');
+        return;
+    }
+
+    var userid = req.session.user.id;
+    //var linkid = req.body....
+
+    var client = new pg.Client(databaseUrl);
+    client.connect(function(err) {
+
+        if (err) {
+            throw err;
+        }
+        var query = "INSERT INTO likes(linkid, userid) VALUES($1, $2) RETURNING id;";
+        //client.query(query, [linkid, userid] function (err, results) {
+        if (err) {
+            console.log(err);
+        } else {
+            client.end();
+
+            var client1 = new pg.Client(databaseUrl);
+            client1.connect(function(err) {
+                if (err) {
+                    throw err;
+                }
+                var query1 = "SELECT * FROM likes;";
+                client1.query(query1, function (err, results) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        client1.end();
+
+                        res.json({
+                            data: results.rows
+                        });
+                    }
+                });
+            });
+        }
+    });
 });
 
 app.listen(process.env.PORT || 8081);
