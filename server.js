@@ -30,13 +30,9 @@ app.use(function (err, req, res, next) {
   res.send('something is wrong')
 });
 
-
 var transformResultsIntoLinkedList = function (results) {
 
     var comments = results.rows;
-
-
-
 
     var nodes = [];
     var toplevelNodes = [];
@@ -50,20 +46,18 @@ var transformResultsIntoLinkedList = function (results) {
             children: [],
             user_id: comments[i].user_id,
             comment: comments[i].comment,
-            timestamp: comments[i].timestamp,
+            timestamp: comments[i].timestamp.toString(),
             link: comments[i].link,
             content: comments[i].content
         };
         lookupList[n.id] = n;
-        console.log(comments[i].timestamp, Object.prototype.toString.call(comments[i].timestamp))
+        //console.log(comments[i].timestamp, Object.prototype.toString.call(comments[i].timestamp))
         nodes.push(n);
 
         if (n.parent_id == null) {
             toplevelNodes.push(n);
         }
     }
-
-
 
     for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i];
@@ -134,7 +128,6 @@ app.get('/init', function(req, res, next) {
         });
     }
 });
-
 
 app.get('/', function(req, res, next) {
 
@@ -310,7 +303,7 @@ app.get('/links', function (req, res) {
                 client.end();
 
                 for (var row in results.rows) {
-                    results.rows[row].timestamp = results.rows[row].timestamp;
+                    results.rows[row].timestamp = results.rows[row].timestamp.toString();
                 }
                 res.json({
 
