@@ -54,11 +54,17 @@
                 <li id="storyContainer">
                 <a class="mainStory" href="{{link}}">{{content}}</a>
                 <div class="storyTimestamp">posted on {{timestamp}} by {{name}}</div>
-                <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">comments</a>
+                <a class="mainComment" id="comment-{{id}}" href="/#comments/{{id}}">comments</a> <div id="likeButtonSlot"></div>
                 {{/.}}
                 </script>
             </ul>
         </div>
+    </div>
+
+    <div id="likeButtonContainer" style="display: none">
+        <form>
+            <input id="likeButton" type="button" value="like">
+        </form>
     </div>
 
     <div id="postForm" style="display: none">
