@@ -108,8 +108,6 @@ h1 {
 	margin-left: 20px;
 }
 
-
-
 #emailLabel {
 	font-family: arial;
     width: 200px;
@@ -216,12 +214,21 @@ li {
 }
 
 .mainComment {
+    display: inline;
     font-size: 10pt;
 	font-family: arial;
 	color: white;
     border: solid grey 1px;
     padding: 2px;
     background-color: grey;
+}
+
+.likeButtonForm {
+    display: inline;
+}
+
+.likeButtonContainer {
+    display:inline;
 }
 
 .commentDiv {
