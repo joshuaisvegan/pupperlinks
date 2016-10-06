@@ -236,6 +236,12 @@ li {
     display:inline;
 }
 
+.likesCount {
+    display: inline;
+    font-family: arial;
+    color: grey;
+}
+
 .commentDiv {
 	margin-top: 20px;
 }
