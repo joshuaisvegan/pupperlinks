@@ -6,13 +6,13 @@ var csrf = require('csurf');
 const hb = require('express-handlebars');
 const bcrypt = require('bcrypt');
 const url = require('url');
+var functions = require('./functions');
 
 var databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl){
     databaseUrl = 'postgres://' + require('./credentials').pgUser + ':' + require('./credentials').pgPassword + '@localhost:5432/users';
 }
-
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -23,45 +23,6 @@ app.use(function (err, req, res, next) {
   res.send('something is wrong')
 });
 
-var transformResultsIntoLinkedList = function (results) {
-
-    var comments = results.rows;
-
-    var nodes = [];
-    var toplevelNodes = [];
-    var lookupList = {};
-
-    for (var i = 0; comments[i]; i++) {
-        var n = {
-            name: comments[i].name,
-            id: comments[i].id,
-            parent_id: ((comments[i].parent_id == null) ? null : comments[i].parent_id),
-            children: [],
-            user_id: comments[i].user_id,
-            comment: comments[i].comment,
-            timestamp: comments[i].timestamp.toString(),
-            link: comments[i].link,
-            content: comments[i].content
-        };
-        lookupList[n.id] = n;
-        //console.log(comments[i].timestamp, Object.prototype.toString.call(comments[i].timestamp))
-        nodes.push(n);
-
-        if (n.parent_id == null) {
-            toplevelNodes.push(n);
-        }
-    }
-
-    for (var i = 0; i < nodes.length; i++) {
-        var n = nodes[i];
-        if (!(n.parent_id == null)) {
-            lookupList[n.parent_id].children = lookupList[n.parent_id].children.concat([n]);
-        }
-    }
-
-    return toplevelNodes;
-
-}
 
 var checkStatus = function(req, res, next) {
     if (req.session.user) {
@@ -77,32 +38,6 @@ var checkStatus = function(req, res, next) {
 app.use(require('body-parser').urlencoded({
     extended: false
 }));
-
-var hashPassword = function (plainTextPassword, callback) {
-    bcrypt.genSalt(function(err, salt) {
-        if (err) {
-            return callback(err);
-        }
-
-        bcrypt.hash(plainTextPassword, salt, function(err, hash) {
-            if (err) {
-                return callback(err);
-            }
-
-            callback(null, hash);
-        });
-    });
-}
-
-var checkPassword = function (textEnteredInLoginForm, hashedPasswordFromDatabase, callback) {
-    bcrypt.compare(textEnteredInLoginForm, hashedPasswordFromDatabase, function(err, doesMatch) {
-        if (err) {
-            return callback(err);
-        }
-        console.log(doesMatch);
-        callback(null, doesMatch);
-    });
-}
 
 app.use(cookieSession({
     name: 'session',
@@ -141,7 +76,7 @@ app.post('/register', function(req, res){
         if (err){
             throw err;
         }
-        hashPassword(req.body.password, function(err, hash) {
+        functions.hashPassword(req.body.password, function(err, hash) {
             if (err) {
                 console.log(err);
             }
@@ -197,7 +132,7 @@ app.post('/login', function (req, res) {
                 console.log(err)
             } else {
                 client.end();
-                checkPassword(req.body.password, results.rows[0].hash, function (err, doesMatch) {
+                functions.checkPassword(req.body.password, results.rows[0].hash, function (err, doesMatch) {
                     if (err) {
 
                         console.log(err)
@@ -288,7 +223,7 @@ app.get('/links', function (req, res) {
             throw err;
         }
 
-        var query = "SELECT * FROM links"
+        var query = "SELECT links.id, links.link, links.userid, links.content, links.timestamp, userslinks.name FROM links, userslinks WHERE links.userid = userslinks.id;";
         client.query(query, function(err, results) {
 
             if (err) {
@@ -300,6 +235,7 @@ app.get('/links', function (req, res) {
                 for (var row in results.rows) {
                     results.rows[row].timestamp = results.rows[row].timestamp.toString();
                 }
+                console.log(results.rows)
                 res.json({
 
                     data: results.rows
@@ -349,7 +285,7 @@ app.get('/comments/:id', function(req, res) {
                     return;
                 }
 
-                var list = transformResultsIntoLinkedList(results);
+                var list = functions.transformResultsIntoLinkedList(results);
 
                 client.end();
 
@@ -394,7 +330,7 @@ app.post('/reply/:id', function(req, res) {
                             console.log(err);
                         } else {
 
-                            var list = transformResultsIntoLinkedList(results);
+                            var list = functions.transformResultsIntoLinkedList(results);
                             console.log(list);
 
                             client.end();
@@ -448,7 +384,7 @@ app.post('/comments', function(req, res) {
                                     console.log(err);
                                 } else {
 
-                                    var list = transformResultsIntoLinkedList(results);
+                                    var list = functions.transformResultsIntoLinkedList(results);
 
                                     client.end();
                                     res.json({
@@ -481,7 +417,7 @@ app.post('/comments', function(req, res) {
                                     console.log(err);
                                 } else {
 
-                                    var list = transformResultsIntoLinkedList(results);
+                                    var list = functions.transformResultsIntoLinkedList(results);
 
                                     client.end();
                                     res.json({
