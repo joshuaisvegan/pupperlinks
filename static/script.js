@@ -210,10 +210,11 @@
         },
         events: {
             'click #registerButton': function(event) {
+                console.log('register');
                 this.model.set({
-                    name: $('#name').val(),
-                    email: $('#email').val(),
-                    password: $('#password').val(),
+                    name: $('#registrationName').val(),
+                    email: $('#registrationEmail').val(),
+                    password: $('#registrationPassword').val(),
                 }).save().then(function(res) {
                     isLoggedIn = true;
                     console.log('loggedin');
