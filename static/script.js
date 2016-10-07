@@ -270,6 +270,8 @@
             'click .likeButton': function(event) {
                 var likeId = (event.currentTarget.id).substr(11);
                 console.log(likeId);
+                var counter = $('#likesCounter').val();
+                console.log(counter);
 
                 var likesModel = new LikesModel({
                     likeId: likeId,
