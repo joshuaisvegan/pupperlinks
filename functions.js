@@ -34,6 +34,7 @@ exports.transformResultsIntoLinkedList = function (results) {
 
     var comments = results.rows;
 
+
     var nodes = [];
     var toplevelNodes = [];
     var lookupList = {};
