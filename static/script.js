@@ -257,6 +257,8 @@
             $('#invalidUrlSlot').empty();
             console.log(isLoggedIn);
 
+            var id =
+
             this.render();
             var view = this;
             this.model.on('change', function () {
@@ -273,12 +275,12 @@
                 counter++;
                 $('#likesCounter'+likeId).empty();
                 $('#likesCounter'+likeId).html(counter);
-                //console.log(incrementedCounter);
 
                 var likesModel = new LikesModel({
                     likeId: likeId,
                     _csrf: csrf
                 });
+                $('#likeButton'+'-'+likeId).removeClass('likeButton');
             }
         }
     });
