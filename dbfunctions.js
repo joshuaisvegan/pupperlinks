@@ -255,7 +255,7 @@ exports.getLinksAndLikes = function (req, res) {
             throw err;
         }
 
-        var query = "SELECT links.id, links.link, links.userid, links.content, links.timestamp, userslinks.name FROM links, userslinks WHERE links.userid = userslinks.id;";
+        var query = "SELECT links.id, links.link, links.userid, links.content, links.timestamp, userslinks.name FROM links, userslinks WHERE links.userid = userslinks.id ORDER BY links.timestamp DESC;";
         client.query(query, function(err, results) {
 
             client.end();
@@ -303,7 +303,6 @@ exports.getLinksAndLikes = function (req, res) {
                 }
 
                 Promise.all(likePromises).then(function() {
-                    console.log(results.rows)
 
                     res.json({
 

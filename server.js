@@ -17,11 +17,11 @@ if (!databaseUrl){
 
 // error handler
 app.use(function (err, req, res, next) {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
 
-  // handle CSRF token errors here
-  res.status(403)
-  res.send('something is wrong')
+    // handle CSRF token errors here
+    res.status(403)
+    res.send('something is wrong')
 });
 
 
@@ -113,7 +113,7 @@ app.get('/comments/:id', function(req, res) {
 app.post('/reply/:id', function(req, res) {
 
     dbfunctions.postReply(req, res);
-    
+
 })
 
 app.post('/comments', function(req, res) {
@@ -129,7 +129,7 @@ app.post('/likes', function (req, res) {
     }
 
     var userid = req.session.user.id;
-    //var linkid = req.body....
+    var linkid = req.body.likeId;
 
     var client = new pg.Client(databaseUrl);
     client.connect(function(err) {
@@ -138,31 +138,14 @@ app.post('/likes', function (req, res) {
             throw err;
         }
         var query = "INSERT INTO likes(linkid, userid) VALUES($1, $2) RETURNING id;";
-        //client.query(query, [linkid, userid] function (err, results) {
-        if (err) {
-            console.log(err);
-        } else {
-            client.end();
-
-            var client1 = new pg.Client(databaseUrl);
-            client1.connect(function(err) {
-                if (err) {
-                    throw err;
-                }
-                var query1 = "SELECT * FROM likes;";
-                client1.query(query1, function (err, results) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        client1.end();
-
-                        res.json({
-                            data: results.rows
-                        });
-                    }
-                });
-            });
-        }
+        client.query(query, [linkid, userid], function (err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+                client.end();
+                res.sendStatus(200)
+            }
+        });
     });
 });
 
