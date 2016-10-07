@@ -269,9 +269,11 @@
             },
             'click .likeButton': function(event) {
                 var likeId = (event.currentTarget.id).substr(11);
-                console.log(likeId);
-                var counter = $('#likesCounter').val();
-                console.log(counter);
+                var counter = $('#likesCounter'+likeId).text();
+                counter++;
+                $('#likesCounter'+likeId).empty();
+                $('#likesCounter'+likeId).html(counter);
+                //console.log(incrementedCounter);
 
                 var likesModel = new LikesModel({
                     likeId: likeId,
